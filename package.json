@@ -1,0 +1,24 @@
+{
+  "name": "v6-web-sdk-braintree-demo",
+  "version": "1.0.0",
+  "description": "Demo application showing PayPal v6 Web SDK integration with Braintree",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "tsx --watch server",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "braintree": "^3.32.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/braintree": "^3.4.0",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.14.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
