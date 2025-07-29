@@ -26,9 +26,9 @@ cp .env.sample .env
 
 Edit the `.env` file with your Braintree credentials from step 
 ```
-BRAINTREE_SANDBOX_MERCHANT_ID=your_merchant_id_here
-BRAINTREE_SANDBOX_MERCHANT_PUBLIC_KEY=your_public_key_here
-BRAINTREE_SANDBOX_MERCHANT_PRIVATE_KEY=your_private_key_here
+BRAINTREE_SANDBOX_MERCHANT_ID=your_braintree_sandbox_merchant_id_here
+BRAINTREE_SANDBOX_MERCHANT_PUBLIC_KEY=your_braintree_sandbox_public_key_here
+BRAINTREE_SANDBOX_MERCHANT_PRIVATE_KEY=your_braintree_sandbox_private_key_here
 ```
 
 ### 4. Create a PayPal Sandbox Business Account
