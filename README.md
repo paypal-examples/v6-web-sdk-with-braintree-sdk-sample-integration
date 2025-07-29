@@ -11,9 +11,9 @@ git clone https://github.com/paypal-examples/v6-web-sdk-sample-integration.git
 
 cd v6-web-sdk-with-braintree-sdk-sample-integration
 
-npm install
-
 cp .env.sample .env
+
+npm install
 ```
 
 ### 2. Create a Braintree Sandbox Account
