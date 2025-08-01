@@ -53,6 +53,10 @@ const PayPalButton: React.FC<{ setModalState: (state: ModalType) => void }> = ({
     }
   };
 
+  if (!paypalInstance || !braintreePayPalCheckout) {
+    return null;
+  }
+
   return (
     <paypal-button
       onClick={() => payPalOnClickHandler()}
