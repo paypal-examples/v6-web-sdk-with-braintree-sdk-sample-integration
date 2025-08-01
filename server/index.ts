@@ -6,7 +6,7 @@ import braintree from 'braintree';
 dotenv.config();
 
 const app = express();
-const PORT: string = process.env.PORT || '3000';
+const PORT: string = process.env.PORT || '8080';
 
 app.use(express.json());
 app.use(express.static('client'));
@@ -102,6 +102,62 @@ app.post(
       res
         .status(500)
         .json({ success: false, errors: ['Failed to complete transaction'] });
+    }
+  }
+);
+
+app.post(
+  '/api/braintree/payment-method/save',
+  async (
+    req: Request<{ paymentMethodNonce: string; }>,
+    res: Response<
+      | {
+          success: true;
+          paymentMethod: braintree.PayPalAccount;
+          customer?: braintree.Customer;
+        }
+      | { success: false; errors: braintree.ValidationError[] | string[] }
+    >
+  ) => {
+    try {
+      const { paymentMethodNonce } = req.body;
+      const gateway = getBraintreeGateway();
+
+      const createCustomerResult = await gateway.customer.create({});
+
+      if (!createCustomerResult.success) {
+        res.status(400).json({
+          success: false,
+          errors: createCustomerResult.errors.deepErrors(),
+        });
+        return;
+      }
+
+      const customer = createCustomerResult.customer;
+
+      const result = await gateway.paymentMethod.create({
+        customerId: customer.id,
+        paymentMethodNonce,
+      });
+
+      if (!result.success) {
+        res.status(400).json({
+          success: false,
+          errors: result.errors.deepErrors(),
+        });
+        return;
+      }
+
+      res.json({
+        success: true,
+        paymentMethod: result.paymentMethod as braintree.PayPalAccount,
+        customer,
+      });
+    } catch (error) {
+      console.error('Failed to save payment method:', error);
+      res
+        .status(500)
+        .json({ success: false, errors: ['Failed to save payment method'] });
     }
   }
 );
