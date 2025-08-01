@@ -70,11 +70,11 @@ export const PayPalSDKProvider: React.FC<PayPalSDKProviderProps> = ({
     const loadPayPalSDK = async () => {
       if (!paypalInstance && clientToken) {
         try {
-          const { paypalInstance, braintreePayPalCheckout } = await initPayPalAndBraintreeSdk(
+          const result = await initPayPalAndBraintreeSdk(
             { clientToken, components, pageType },
           );
-          setPayPalInstance(paypalInstance);
-          setBraintreePayPalCheckout(braintreePayPalCheckout);
+          setPayPalInstance(result.paypalInstance);
+          setBraintreePayPalCheckout(result.braintreePayPalCheckout);
         } catch (error) {
           showBoundary(error);
         }
@@ -82,7 +82,7 @@ export const PayPalSDKProvider: React.FC<PayPalSDKProviderProps> = ({
     };
 
     loadPayPalSDK();
-  });
+  }, [clientToken]);
 
   return (
     <PayPalSDKContext.Provider
