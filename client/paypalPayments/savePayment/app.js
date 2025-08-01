@@ -79,7 +79,6 @@ async function onPayPalWebSdkLoaded() {
           phone: '123.456.7890'
         }
       });
-      console.log('Billing token', billingToken);
   
     return { billingToken };
   }
