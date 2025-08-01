@@ -47,11 +47,13 @@ module.exports = (env, argv) => {
     ],
     devServer: {
       port: 3000,
-      open: false,
+      open: {
+        target: [`http://localhost:${process.env.PORT || '8080'}`],
+      },
       proxy: [
         {
           context: ['/api'],
-          target: 'http://localhost:8080',
+          target: `http://localhost:${process.env.PORT || '8080'}`,
           changeOrigin: true,
         },
       ],
