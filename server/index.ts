@@ -6,7 +6,7 @@ import braintree from 'braintree';
 dotenv.config();
 
 const app = express();
-const PORT: string = process.env.PORT || '8000';
+const PORT: string = process.env.PORT || '8080';
 
 app.use(express.json());
 app.use(express.static('client'));

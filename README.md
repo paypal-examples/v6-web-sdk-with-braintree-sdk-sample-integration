@@ -47,4 +47,4 @@ Go to [PayPal Developer Portal](https://www.paypal.com/signin/client?flow=provis
 npm start
 ```
 
-Visit http://localhost:3000 to see the demo.
+Visit http://localhost:8080 to see the demo.
