@@ -96,4 +96,4 @@ async function completePayment(paymentMethodNonce) {
   const result = await response.json();
 
   return result;
-}
+} 
