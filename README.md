@@ -37,7 +37,9 @@ Go to [PayPal Developer Portal](https://www.paypal.com/signin/client?flow=provis
 
 ### 5. Link Braintree Sandbox Account with PayPal sandbox account.
 
-Follow the [Linking Braintree to PayPal Guide](https://developer.paypal.com/braintree/docs/guides/paypal/testing-go-live/javascript/v3/#linked-paypal-testing) to enable PayPal payments through your Braintree integration.
+1. Follow the [Linking Braintree to PayPal Guide](https://developer.paypal.com/braintree/docs/guides/paypal/testing-go-live/javascript/v3/#linked-paypal-testing) to enable PayPal payments through your Braintree integration.
+
+2. After creating your sandbox account go to the [Apps & Credentials section](https://developer.paypal.com/dashboard/applications/sandbox) and click on the PayPal application you linked to your Braintree account. Scroll to the "Features" section and make sure the "Vault" and "PayPal and Venmo" boxes are checked.
 
 ### 6. Run the Application
 
