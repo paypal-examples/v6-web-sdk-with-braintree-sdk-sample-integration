@@ -1,12 +1,19 @@
-import React, { useContext, useRef, useEffect } from "react";
-import { PayPalSDKContext } from "../context/sdkContext";
-import { captureOrder, createOrder } from "../utils";
-import { OnApproveData, PaymentSessionOptions, SessionOutput } from "../types/paypal";
-import { useErrorBoundary } from "react-error-boundary";
-import { ModalType } from "../sections/SoccerBall";
+import React, { useContext, useRef, useEffect } from 'react';
+import { PayPalSDKContext } from '../context/sdkContext';
+import { captureOrder, createOrder } from '../utils';
+import {
+  OnApproveData,
+  PaymentSessionOptions,
+  SessionOutput,
+} from '../types/paypal';
+import { useErrorBoundary } from 'react-error-boundary';
+import { ModalType } from '../sections/SoccerBall';
 
-const PayPalButton: React.FC<{ setModalState: (state: ModalType) => void }> = ({ setModalState }) => {
-  const { paypalInstance, braintreePayPalCheckout } = useContext(PayPalSDKContext);
+const PayPalButton: React.FC<{ setModalState: (state: ModalType) => void }> = ({
+  setModalState,
+}) => {
+  const { paypalInstance, braintreePayPalCheckout } =
+    useContext(PayPalSDKContext);
   const { showBoundary } = useErrorBoundary();
   const paypalSession = useRef<SessionOutput | null>(null);
 
@@ -14,7 +21,7 @@ const PayPalButton: React.FC<{ setModalState: (state: ModalType) => void }> = ({
     if (paypalInstance && braintreePayPalCheckout) {
       paypalSession.current = paypalInstance.createPayPalOneTimePaymentSession({
         onApprove: async (data: OnApproveData) => {
-          console.log("Payment approved:", data);
+          console.log('Payment approved:', data);
           // @ts-ignore
           const { nonce } = await braintreePayPalCheckout.tokenizePayment({
             // @ts-ignore
@@ -22,18 +29,18 @@ const PayPalButton: React.FC<{ setModalState: (state: ModalType) => void }> = ({
             paymentID: data.orderId,
           });
           const captureResult = await captureOrder(nonce);
-          console.log("Payment capture result:", captureResult);
-          setModalState("success");
+          console.log('Payment capture result:', captureResult);
+          setModalState('success');
         },
-    
+
         onCancel: () => {
-          console.log("Payment cancelled");
-          setModalState("cancel");
+          console.log('Payment cancelled');
+          setModalState('cancel');
         },
-    
+
         onError: (error: Error) => {
-          console.error("Payment error:", error);
-          setModalState("error");
+          console.error('Payment error:', error);
+          setModalState('error');
         },
       });
     }
@@ -44,8 +51,8 @@ const PayPalButton: React.FC<{ setModalState: (state: ModalType) => void }> = ({
 
     try {
       await paypalSession.current.start(
-        { presentationMode: "auto" },
-        createOrder(braintreePayPalCheckout),
+        { presentationMode: 'auto' },
+        createOrder(braintreePayPalCheckout)
       );
     } catch (e) {
       console.error(e);

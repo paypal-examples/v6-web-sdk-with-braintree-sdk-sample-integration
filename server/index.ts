@@ -109,7 +109,7 @@ app.post(
 app.post(
   '/api/braintree/payment-method/save',
   async (
-    req: Request<{ paymentMethodNonce: string; }>,
+    req: Request<{ paymentMethodNonce: string }>,
     res: Response<
       | {
           success: true;

@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
-  
+
   return {
     entry: './src/index.tsx',
     output: {
@@ -61,4 +61,4 @@ module.exports = (env, argv) => {
     mode: isProduction ? 'production' : 'development',
     devtool: isProduction ? 'source-map' : 'eval-source-map',
   };
-}; 
+};

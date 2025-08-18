@@ -1,14 +1,14 @@
-import React, { useState, useEffect, createContext } from "react";
-import { useErrorBoundary } from "react-error-boundary";
-import { client as braintreeClient, paypalCheckout } from "braintree-web";
-import type { PayPalCheckout } from "braintree-web";
+import React, { useState, useEffect, createContext } from 'react';
+import { useErrorBoundary } from 'react-error-boundary';
+import { client as braintreeClient, paypalCheckout } from 'braintree-web';
+import type { PayPalCheckout } from 'braintree-web';
 
 import type {
   Component,
   CreateInstanceOptions,
   PageType,
   PayPalInstance,
-} from "../types/paypal";
+} from '../types/paypal';
 
 async function initPayPalAndBraintreeSdk({
   clientToken,
@@ -63,16 +63,21 @@ export const PayPalSDKProvider: React.FC<PayPalSDKProviderProps> = ({
   pageType,
 }) => {
   const { showBoundary } = useErrorBoundary();
-  const [paypalInstance, setPayPalInstance] = useState<PayPalInstance | null>(null);
-  const [braintreePayPalCheckout, setBraintreePayPalCheckout] = useState<PayPalCheckout | null>(null);
+  const [paypalInstance, setPayPalInstance] = useState<PayPalInstance | null>(
+    null
+  );
+  const [braintreePayPalCheckout, setBraintreePayPalCheckout] =
+    useState<PayPalCheckout | null>(null);
 
   useEffect(() => {
     const loadPayPalSDK = async () => {
       if (!paypalInstance && clientToken) {
         try {
-          const result = await initPayPalAndBraintreeSdk(
-            { clientToken, components, pageType },
-          );
+          const result = await initPayPalAndBraintreeSdk({
+            clientToken,
+            components,
+            pageType,
+          });
           setPayPalInstance(result.paypalInstance);
           setBraintreePayPalCheckout(result.braintreePayPalCheckout);
         } catch (error) {
@@ -88,7 +93,7 @@ export const PayPalSDKProvider: React.FC<PayPalSDKProviderProps> = ({
     <PayPalSDKContext.Provider
       value={{
         paypalInstance,
-        braintreePayPalCheckout
+        braintreePayPalCheckout,
       }}
     >
       {children}
