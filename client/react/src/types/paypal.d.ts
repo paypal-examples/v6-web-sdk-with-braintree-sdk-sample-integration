@@ -3,28 +3,28 @@ declare global {
   interface Window {
     paypal: {
       createInstance: (
-        createInstanceOptions: CreateInstanceOptions,
+        createInstanceOptions: CreateInstanceOptions
       ) => Promise<PayPalInstance>;
     };
   }
 }
 
-declare module "react" {
+declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
-      "paypal-button": ButtonProps;
+      'paypal-button': ButtonProps;
     }
   }
 }
 
-export type Component = "paypal-payments" | "paypal-legacy-billing-agreements";
+export type Component = 'paypal-payments' | 'paypal-billing-agreements';
 export type PageType =
-  | "cart"
-  | "checkout"
-  | "mini-cart"
-  | "product-details"
-  | "product-listing"
-  | "search-results";
+  | 'cart'
+  | 'checkout'
+  | 'mini-cart'
+  | 'product-details'
+  | 'product-listing'
+  | 'search-results';
 
 type CreateInstanceOptions = {
   clientMetadataId?: string;
@@ -53,7 +53,7 @@ type OnApproveData = {
 export type PayPalInstance = {
   // "paypal-payments" component
   createPayPalOneTimePaymentSession: (
-    paymentSessionOptions: PaymentSessionOptions,
+    paymentSessionOptions: PaymentSessionOptions
   ) => SessionOutput;
 };
 
@@ -64,14 +64,14 @@ type FindEligibleMethodsOptions = {
 type SessionOutput = {
   start: (
     options: StartSessionInput,
-    orderIdPromise: Promise<{ orderId: string }>,
+    orderIdPromise: Promise<{ orderId: string }>
   ) => Promise<void>;
   destroy: () => void;
   cancel: () => void;
 };
 
 type StartSessionInput = {
-  presentationMode?: "auto" | "popup" | "modal" | "payment-handler";
+  presentationMode?: 'auto' | 'popup' | 'modal' | 'payment-handler';
   fullPageOverlay?: {
     enabled?: boolean;
   };
