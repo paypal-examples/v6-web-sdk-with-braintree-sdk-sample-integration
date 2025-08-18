@@ -24,7 +24,8 @@ npm install
 
 ### 3. Configure Environment Variables
 
-Edit the `.env` file with your Braintree credentials from step 
+Edit the `.env` file with your Braintree credentials from step
+
 ```
 BRAINTREE_SANDBOX_MERCHANT_ID=your_braintree_sandbox_merchant_id_here
 BRAINTREE_SANDBOX_MERCHANT_PUBLIC_KEY=your_braintree_sandbox_public_key_here

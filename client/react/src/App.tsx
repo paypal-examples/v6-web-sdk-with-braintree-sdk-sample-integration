@@ -43,7 +43,9 @@ function App() {
         components={["paypal-payments"]}
         pageType="checkout"
       >
-        <h1>React Braintree with PayPal One-Time Payment Recommended Integration</h1>
+        <h1>
+          React Braintree with PayPal One-Time Payment Recommended Integration
+        </h1>
         <SoccerBall />
       </PayPalSDKProvider>
     </ErrorBoundary>

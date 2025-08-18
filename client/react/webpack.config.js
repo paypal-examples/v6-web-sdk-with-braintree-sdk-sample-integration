@@ -1,25 +1,25 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
 
 module.exports = (env, argv) => {
-  const isProduction = argv.mode === 'production';
-  
+  const isProduction = argv.mode === "production";
+
   return {
-    entry: './src/index.tsx',
+    entry: "./src/index.tsx",
     output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: isProduction ? 'bundle.[contenthash].js' : 'bundle.js',
+      path: path.resolve(__dirname, "dist"),
+      filename: isProduction ? "bundle.[contenthash].js" : "bundle.js",
       clean: true,
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: [".tsx", ".ts", ".js"],
     },
     module: {
       rules: [
         {
           test: /\.(ts|tsx)$/,
           use: {
-            loader: 'ts-loader',
+            loader: "ts-loader",
             options: {
               transpileOnly: true,
               compilerOptions: {
@@ -31,34 +31,34 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css$/i,
-          use: ['style-loader', 'css-loader'],
+          use: ["style-loader", "css-loader"],
         },
         {
           test: /\.(png|jpe?g|gif|svg)$/i,
-          type: 'asset/resource',
+          type: "asset/resource",
         },
       ],
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './public/index.html',
-        title: 'React PayPal Braintree Recommended Integration',
+        template: "./public/index.html",
+        title: "React PayPal Braintree Recommended Integration",
       }),
     ],
     devServer: {
       port: 3000,
       open: {
-        target: [`http://localhost:${process.env.PORT || '8080'}`],
+        target: [`http://localhost:${process.env.PORT || "8080"}`],
       },
       proxy: [
         {
-          context: ['/api'],
-          target: `http://localhost:${process.env.PORT || '8080'}`,
+          context: ["/api"],
+          target: `http://localhost:${process.env.PORT || "8080"}`,
           changeOrigin: true,
         },
       ],
     },
-    mode: isProduction ? 'production' : 'development',
-    devtool: isProduction ? 'source-map' : 'eval-source-map',
+    mode: isProduction ? "production" : "development",
+    devtool: isProduction ? "source-map" : "eval-source-map",
   };
-}; 
+};

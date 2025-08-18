@@ -19,7 +19,7 @@ export const createOrder = async (braintreeCheckout: PayPalCheckout) => {
     // @ts-ignore
     flow: "checkout",
     amount: 10.0,
-    currency: 'USD',
+    currency: "USD",
     // @ts-ignore
     intent: "capture",
   });
@@ -28,10 +28,10 @@ export const createOrder = async (braintreeCheckout: PayPalCheckout) => {
 };
 
 export const captureOrder = async (paymentMethodNonce: string) => {
-  const response = await fetch('/api/braintree/transaction/sale', {
-    method: 'POST',
+  const response = await fetch("/api/braintree/transaction/sale", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       paymentMethodNonce,

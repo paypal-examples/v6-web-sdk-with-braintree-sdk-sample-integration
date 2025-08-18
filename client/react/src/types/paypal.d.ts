@@ -3,7 +3,7 @@ declare global {
   interface Window {
     paypal: {
       createInstance: (
-        createInstanceOptions: CreateInstanceOptions,
+        createInstanceOptions: CreateInstanceOptions
       ) => Promise<PayPalInstance>;
     };
   }
@@ -17,7 +17,7 @@ declare module "react" {
   }
 }
 
-export type Component = "paypal-payments" | "paypal-legacy-billing-agreements";
+export type Component = "paypal-payments" | "paypal-billing-agreements";
 export type PageType =
   | "cart"
   | "checkout"
@@ -53,7 +53,7 @@ type OnApproveData = {
 export type PayPalInstance = {
   // "paypal-payments" component
   createPayPalOneTimePaymentSession: (
-    paymentSessionOptions: PaymentSessionOptions,
+    paymentSessionOptions: PaymentSessionOptions
   ) => SessionOutput;
 };
 
@@ -64,7 +64,7 @@ type FindEligibleMethodsOptions = {
 type SessionOutput = {
   start: (
     options: StartSessionInput,
-    orderIdPromise: Promise<{ orderId: string }>,
+    orderIdPromise: Promise<{ orderId: string }>
   ) => Promise<void>;
   destroy: () => void;
   cancel: () => void;

@@ -50,7 +50,7 @@ const SoccerBall: React.FC = () => {
           return null;
       }
     },
-    [],
+    []
   );
 
   const modalContent = getModalContent(modalState);
