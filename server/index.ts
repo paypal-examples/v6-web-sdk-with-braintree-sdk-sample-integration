@@ -1,15 +1,15 @@
-import express, { Request, Response } from 'express';
-import path from 'path';
-import dotenv from 'dotenv';
-import braintree from 'braintree';
+import express, { Request, Response } from "express";
+import path from "path";
+import dotenv from "dotenv";
+import braintree from "braintree";
 
 dotenv.config();
 
 const app = express();
-const PORT: string = process.env.PORT || '8080';
+const PORT: string = process.env.PORT || "8080";
 
 app.use(express.json());
-app.use(express.static('client'));
+app.use(express.static("client"));
 
 let gateway: braintree.BraintreeGateway | undefined;
 
@@ -22,7 +22,7 @@ function getBraintreeGateway(): braintree.BraintreeGateway {
     process.env.BRAINTREE_SANDBOX_MERCHANT_PRIVATE_KEY;
 
   if (!merchantId || !publicKey || !privateKey) {
-    throw new Error('Braintree credentials not configured');
+    throw new Error("Braintree credentials not configured");
   }
 
   if (gateway === undefined) {
@@ -37,12 +37,12 @@ function getBraintreeGateway(): braintree.BraintreeGateway {
   return gateway;
 }
 
-app.get('/', (_req: Request, res: Response): void => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+app.get("/", (_req: Request, res: Response): void => {
+  res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
 app.get(
-  '/api/braintree/browser-safe-client-token',
+  "/api/braintree/browser-safe-client-token",
   async (
     _req: Request,
     res: Response<{ accessToken: string } | { error: string }>
@@ -55,14 +55,14 @@ app.get(
         accessToken: response.clientToken,
       });
     } catch (error) {
-      console.error('Failed to generate Braintree client token:', error);
-      res.status(500).json({ error: 'Failed to generate client token' });
+      console.error("Failed to generate Braintree client token:", error);
+      res.status(500).json({ error: "Failed to generate client token" });
     }
   }
 );
 
 app.post(
-  '/api/braintree/transaction/sale',
+  "/api/braintree/transaction/sale",
   async (
     req: Request<{ amount: number | string; paymentMethodNonce: string }>,
     res: Response<
@@ -98,16 +98,16 @@ app.post(
         result,
       });
     } catch (error) {
-      console.error('Failed to complete Braintree transaction:', error);
+      console.error("Failed to complete Braintree transaction:", error);
       res
         .status(500)
-        .json({ success: false, errors: ['Failed to complete transaction'] });
+        .json({ success: false, errors: ["Failed to complete transaction"] });
     }
   }
 );
 
 app.post(
-  '/api/braintree/payment-method/save',
+  "/api/braintree/payment-method/save",
   async (
     req: Request<{ paymentMethodNonce: string }>,
     res: Response<
@@ -154,10 +154,10 @@ app.post(
         customer,
       });
     } catch (error) {
-      console.error('Failed to save payment method:', error);
+      console.error("Failed to save payment method:", error);
       res
         .status(500)
-        .json({ success: false, errors: ['Failed to save payment method'] });
+        .json({ success: false, errors: ["Failed to save payment method"] });
     }
   }
 );

@@ -1,14 +1,14 @@
-import React, { useState, useEffect, createContext } from 'react';
-import { useErrorBoundary } from 'react-error-boundary';
-import { client as braintreeClient, paypalCheckout } from 'braintree-web';
-import type { PayPalCheckout } from 'braintree-web';
+import React, { useState, useEffect, createContext } from "react";
+import { useErrorBoundary } from "react-error-boundary";
+import { client as braintreeClient, paypalCheckout } from "braintree-web";
+import type { PayPalCheckout } from "braintree-web";
 
 import type {
   Component,
   CreateInstanceOptions,
   PageType,
   PayPalInstance,
-} from '../types/paypal';
+} from "../types/paypal";
 
 async function initPayPalAndBraintreeSdk({
   clientToken,

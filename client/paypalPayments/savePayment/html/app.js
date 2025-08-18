@@ -3,8 +3,8 @@ async function onPayPalWebSdkLoaded() {
     const braintreeClientToken = await getBraintreeBrowserSafeClientToken();
     const paypalInstance = await window.paypal.createInstance({
       clientToken: braintreeClientToken,
-      components: ['paypal-billing-agreements'],
-      pageType: 'checkout',
+      components: ["paypal-billing-agreements"],
+      pageType: "checkout",
     });
 
     const braintreeInstance = await window.braintree.client.create({
@@ -25,7 +25,7 @@ async function setupPayPalButton({ paypalInstance, braintreeCheckout }) {
   const paypalPaymentSession =
     paypalInstance.createPayPalBillingAgreementWithoutPurchase({
       async onApprove(data) {
-        console.log('onApprove', data);
+        console.log("onApprove", data);
         const { nonce } = await braintreeCheckout.tokenizePayment({
           billingToken: data.billingToken,
           payerID: data.payerId,
@@ -33,24 +33,24 @@ async function setupPayPalButton({ paypalInstance, braintreeCheckout }) {
           vault: true,
         });
         const orderData = await completePayment(nonce);
-        console.log('Capture result', orderData);
+        console.log("Capture result", orderData);
       },
       onCancel(data) {
-        console.log('onCancel', data);
+        console.log("onCancel", data);
       },
       onError(error) {
-        console.log('onError', error);
+        console.log("onError", error);
       },
     });
 
-  const paypalButton = document.querySelector('#paypal-button');
-  paypalButton.removeAttribute('hidden');
+  const paypalButton = document.querySelector("#paypal-button");
+  paypalButton.removeAttribute("hidden");
 
-  paypalButton.addEventListener('click', async () => {
+  paypalButton.addEventListener("click", async () => {
     try {
       await paypalPaymentSession.start(
         {
-          presentationMode: 'auto',
+          presentationMode: "auto",
         },
         createOrder(braintreeCheckout)
       );
@@ -61,21 +61,21 @@ async function setupPayPalButton({ paypalInstance, braintreeCheckout }) {
 }
 
 async function createOrder(braintreeCheckout) {
-  console.log('Creating payment>');
+  console.log("Creating payment>");
   const billingToken = await braintreeCheckout.createPayment({
-    flow: 'vault', // Required
-    billingAgreementDescription: 'Your agreement description',
+    flow: "vault", // Required
+    billingAgreementDescription: "Your agreement description",
     enableShippingAddress: true,
     shippingAddressEditable: false,
     shippingAddressOverride: {
-      recipientName: 'Scruff McGruff',
-      line1: '1234 Main St.',
-      line2: 'Unit 1',
-      city: 'Chicago',
-      countryCode: 'US',
-      postalCode: '60652',
-      state: 'IL',
-      phone: '123.456.7890',
+      recipientName: "Scruff McGruff",
+      line1: "1234 Main St.",
+      line2: "Unit 1",
+      city: "Chicago",
+      countryCode: "US",
+      postalCode: "60652",
+      state: "IL",
+      phone: "123.456.7890",
     },
   });
 
@@ -83,10 +83,10 @@ async function createOrder(braintreeCheckout) {
 }
 
 async function getBraintreeBrowserSafeClientToken() {
-  const response = await fetch('/api/braintree/browser-safe-client-token', {
-    method: 'GET',
+  const response = await fetch("/api/braintree/browser-safe-client-token", {
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   });
   const { accessToken } = await response.json();
@@ -95,10 +95,10 @@ async function getBraintreeBrowserSafeClientToken() {
 }
 
 async function completePayment(paymentMethodNonce) {
-  const response = await fetch('/api/braintree/payment-method/save', {
-    method: 'POST',
+  const response = await fetch("/api/braintree/payment-method/save", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       paymentMethodNonce,
