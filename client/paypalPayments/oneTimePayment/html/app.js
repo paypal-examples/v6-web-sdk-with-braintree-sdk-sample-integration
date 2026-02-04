@@ -1,34 +1,35 @@
-async function onPayPalWebSdkLoaded() {
+async function onPayPalCheckoutV6Loaded() {
   try {
     const braintreeClientToken = await getBraintreeBrowserSafeClientToken();
-    const paypalInstance = await window.paypal.createInstance({
-      clientToken: braintreeClientToken,
-      components: ["paypal-payments"],
-      pageType: "checkout",
-    });
-
     const braintreeInstance = await window.braintree.client.create({
       authorization: braintreeClientToken,
     });
 
-    const braintreeCheckout = await window.braintree.paypalCheckout.create({
-      client: braintreeInstance,
-    });
+    const paypalCheckoutV6Instance =
+      await window.braintree.paypalCheckoutV6.create({
+        client: braintreeInstance,
+      });
 
-    setupPayPalButton({ paypalInstance, braintreeCheckout });
+    await paypalCheckoutV6Instance.loadPayPalSDK();
+
+    setupPayPalButton(paypalCheckoutV6Instance);
   } catch (error) {
     console.error(error);
   }
 }
 
-async function setupPayPalButton({ paypalInstance, braintreeCheckout }) {
-  const paypalPaymentSession = paypalInstance.createPayPalOneTimePaymentSession(
-    {
+async function setupPayPalButton(paypalCheckoutV6Instance) {
+  const paypalPaymentSession =
+    paypalCheckoutV6Instance.createOneTimePaymentSession({
+      flow: "checkout",
+      amount: 10.0,
+      currency: "USD",
+      intent: "capture",
       async onApprove(data) {
         console.log("onApprove", data);
-        const { nonce } = await braintreeCheckout.tokenizePayment({
+        const { nonce } = await paypalCheckoutV6Instance.tokenizePayment({
+          orderID: data.orderId,
           payerID: data.payerId,
-          paymentID: data.orderId,
         });
         const orderData = await completePayment(nonce);
         console.log("Capture result", orderData);
@@ -39,35 +40,18 @@ async function setupPayPalButton({ paypalInstance, braintreeCheckout }) {
       onError(error) {
         console.log("onError", error);
       },
-    }
-  );
+    });
 
   const paypalButton = document.querySelector("#paypal-button");
   paypalButton.removeAttribute("hidden");
 
   paypalButton.addEventListener("click", async () => {
     try {
-      await paypalPaymentSession.start(
-        {
-          presentationMode: "auto",
-        },
-        createOrder(braintreeCheckout)
-      );
+      await paypalPaymentSession.start();
     } catch (error) {
       console.error(error);
     }
   });
-}
-
-async function createOrder(braintreeCheckout) {
-  const orderId = await braintreeCheckout.createPayment({
-    flow: "checkout",
-    amount: 10.0,
-    currency: "USD",
-    intent: "capture",
-  });
-
-  return { orderId };
 }
 
 async function getBraintreeBrowserSafeClientToken() {
