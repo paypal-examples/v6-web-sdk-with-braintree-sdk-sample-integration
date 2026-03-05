@@ -1,0 +1,12 @@
+{
+  "name": "v6-web-sdk-with-braintree-sdk-sample-integration-client",
+  "version": "1.0.0",
+  "scripts": {
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "prettier": "^3.8.1"
+  }
+}

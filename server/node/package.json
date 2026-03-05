@@ -1,0 +1,50 @@
+{
+  "name": "v6-web-sdk-with-braintree-sdk-sample-integration-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node.js Express server that provides several routes that wrap the Braintree Gateway",
+  "main": "src/server.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "check-node-version": "tsx src/checkNodeVersion.ts",
+    "clean": "rm -rf dist",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "test": "vitest",
+    "typecheck": "tsc --build --noEmit",
+    "lint": "eslint . && npm run typecheck",
+    "prestart": "npm run check-node-version",
+    "start": "dotenvx run -f ../../.env --quiet -- tsx --watch src/server.ts",
+    "start-production": "NODE_ENV=production node dist/src/server.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.52.0",
+    "braintree": "^3.36.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@flydotio/dockerfile": "^0.7.10",
+    "@ngrok/ngrok": "^1.7.0",
+    "@types/braintree": "^3.4.4",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.3",
+    "@types/semver": "^7.7.1",
+    "@types/supertest": "^7.2.0",
+    "eslint": "^10.0.2",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "globals": "^17.4.0",
+    "jiti": "^2.6.1",
+    "prettier": "^3.8.1",
+    "semver": "^7.7.4",
+    "supertest": "^7.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "vitest": "^4.0.18"
+  }
+}
