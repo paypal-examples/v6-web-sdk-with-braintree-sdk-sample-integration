@@ -12,8 +12,6 @@ git clone https://github.com/paypal-examples/v6-web-sdk-sample-integration.git
 cd v6-web-sdk-with-braintree-sdk-sample-integration
 
 cp .env.sample .env
-
-npm install
 ```
 
 ### 2. Create a Braintree Sandbox Account
@@ -45,10 +43,11 @@ Go to [PayPal Developer Portal](https://www.paypal.com/signin/client?flow=provis
 ### 6. Run the Application
 
 To run the server, choose a server implementation from the `server` folder at the root of this repository and follow the instructions in that folder's README. For example, for Node.js run:
-   ```bash
-   cd server/node
-   npm install
-   npm start
-   ```
+
+```bash
+cd server/node
+npm install
+npm start
+```
 
 After running the server, go to [http://localhost:8081](http://localhost:8081) to see the client examples.
