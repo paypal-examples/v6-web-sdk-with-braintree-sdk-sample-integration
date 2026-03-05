@@ -1,6 +1,6 @@
 # PayPal v6 SDK with Braintree Integration Demo
 
-This repository demonstrates how to process PayPal payments by integrating the Braintree Server/Client SDK with the PayPal v6 Web SDK.
+This repository demonstrates how to process PayPal payments by integrating the Braintree Server/Client SDK with PayPal Checkout V6.
 
 ## Setup Instructions
 
@@ -44,8 +44,11 @@ Go to [PayPal Developer Portal](https://www.paypal.com/signin/client?flow=provis
 
 ### 6. Run the Application
 
-```bash
-npm start
-```
+To run the server, choose a server implementation from the `server` folder at the root of this repository and follow the instructions in that folder's README. For example, for Node.js run:
+   ```bash
+   cd server/node
+   npm install
+   npm start
+   ```
 
-Visit http://localhost:8080 to see the demo.
+After running the server, go to [http://localhost:8081](http://localhost:8081) to see the client examples.
