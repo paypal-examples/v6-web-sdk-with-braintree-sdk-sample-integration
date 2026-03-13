@@ -21,8 +21,34 @@ async function onPayPalCheckoutV6Loaded() {
 async function setupPayPalButton(paypalCheckoutV6Instance) {
   const paypalPaymentSession =
     paypalCheckoutV6Instance.createBillingAgreementSession({
-      billingAgreementDescription: "Recurring payment plan - irregular intervals",
+      billingAgreementDescription: "Monthly recurring subscription",
       planType: "RECURRING",
+      amount: "29.99",
+      currency: "USD",
+      planMetadata: {
+        billingCycles: [
+          {
+            billingFrequency: "1",
+            billingFrequencyUnit: "MONTH",
+            numberOfExecutions: "12",
+            sequence: "1",
+            startDate: new Date(Date.now() + 86400000)
+              .toISOString()
+              .split("T")[0],
+            trial: false,
+            pricingScheme: {
+              pricingModel: "VARIABLE",
+              price: "29.99",
+            },
+          },
+        ],
+        currencyIsoCode: "USD",
+        name: "Monthly Recurring Plan",
+        productDescription: "Monthly recurring subscription service",
+        productQuantity: "1.0",
+        productPrice: "29.99",
+        totalAmount: "29.99",
+      },
       async onApprove(data) {
         console.log("onApprove", data);
         const { nonce } = await paypalCheckoutV6Instance.tokenizePayment({
