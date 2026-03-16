@@ -32,7 +32,7 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
             billingFrequencyUnit: "MONTH",
             numberOfExecutions: "12",
             sequence: "1",
-            startDate: new Date(Date.now() + 86400000)
+            startDate: new Date()
               .toISOString()
               .split("T")[0],
             trial: false,
