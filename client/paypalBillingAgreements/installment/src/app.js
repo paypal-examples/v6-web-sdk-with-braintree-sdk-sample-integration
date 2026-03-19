@@ -23,7 +23,6 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
     paypalCheckoutV6Instance.createBillingAgreementSession({
       billingAgreementDescription: "Purchase in 3 equal installments",
       planType: "INSTALLMENT",
-      amount: "299.99",
       currency: "USD",
       planMetadata: {
         billingCycles: [
