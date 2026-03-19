@@ -3,7 +3,11 @@ const LINE_ITEMS = [
   { quantity: "1", unitAmount: "10.00", name: "Gadget", kind: "debit" },
 ];
 
-const itemTotal = LINE_ITEMS.reduce((total, item) => total + (parseFloat(item.quantity) * parseFloat(item.unitAmount)), 0).toFixed(2)
+const itemTotal = LINE_ITEMS.reduce(
+  (total, item) =>
+    total + parseFloat(item.quantity) * parseFloat(item.unitAmount),
+  0,
+).toFixed(2);
 
 const SHIPPING_OPTIONS = [
   {
@@ -27,7 +31,8 @@ const SHIPPING_OPTIONS = [
 ];
 
 function getShippingCost(shippingId) {
-  return SHIPPING_OPTIONS.find((option) => option.id === shippingId)?.amount?.value
+  return SHIPPING_OPTIONS.find((option) => option.id === shippingId)?.amount
+    ?.value;
 }
 
 function getShippingOptions(selectedId) {
@@ -37,7 +42,7 @@ function getShippingOptions(selectedId) {
   }));
 }
 
-function getAmountBreakdown({itemTotal, shippingCost}) {
+function getAmountBreakdown({ itemTotal, shippingCost }) {
   return {
     itemTotal,
     discount: "0.00",
@@ -49,7 +54,7 @@ function getAmountBreakdown({itemTotal, shippingCost}) {
   };
 }
 
-function calculateAmount({itemTotal, shippingCost}) {
+function calculateAmount({ itemTotal, shippingCost }) {
   return (parseFloat(itemTotal) + parseFloat(shippingCost)).toFixed(2);
 }
 
@@ -60,9 +65,9 @@ function getOrderId(data) {
 function updateOrderDetails(shippingId) {
   shippingOptions = getShippingOptions(shippingId);
   shippingCost = getShippingCost(shippingId);
-  amountBreakdown = getAmountBreakdown({itemTotal, shippingCost});
-  amount = calculateAmount({itemTotal, shippingCost});
-};
+  amountBreakdown = getAmountBreakdown({ itemTotal, shippingCost });
+  amount = calculateAmount({ itemTotal, shippingCost });
+}
 
 let shippingId = "standard";
 let shippingOptions;
@@ -119,14 +124,16 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
           updateOrderDetails(shippingId);
         }
 
-        return paypalCheckoutV6Instance.updatePayment({
-          paymentId: getOrderId(data),
-          amount,
-          currency: "USD",
-          lineItems: LINE_ITEMS,
-          shippingOptions,
-          amountBreakdown,
-        }).then((response) => response);
+        return paypalCheckoutV6Instance
+          .updatePayment({
+            paymentId: getOrderId(data),
+            amount,
+            currency: "USD",
+            lineItems: LINE_ITEMS,
+            shippingOptions,
+            amountBreakdown,
+          })
+          .then((response) => response);
       },
       async onApprove(data) {
         const { nonce } = await paypalCheckoutV6Instance.tokenizePayment({
