@@ -85,6 +85,7 @@ async function completePayment(paymentMethodNonce) {
     },
     body: JSON.stringify({
       paymentMethodNonce,
+      // In production, fetch the final amount from your server
       amount: "35.00",
     }),
   });
