@@ -5,17 +5,6 @@
     <title>PayPal Billing Agreements Flow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/client/shared/styles.css" />
-    <style>
-      .buttons-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      alert-component {
-        max-width: 50rem;
-        margin-top: 4rem;
-      }
-    </style>
   </head>
   <body>
     <h1>PayPal Billing Agreements Flow</h1>
@@ -24,9 +13,7 @@
       the PayPal button to vault PayPal accounts for future payments.
     </p>
 
-    <div class="buttons-container">
-      <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
-    </div>
+    <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
     <alert-component></alert-component>
 
     <script src="app.js"></script>
