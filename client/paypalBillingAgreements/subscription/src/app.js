@@ -14,6 +14,7 @@ async function onPayPalCheckoutV6Loaded() {
 
     setupPayPalButton(paypalCheckoutV6Instance);
   } catch (error) {
+    renderAlert({ type: "danger", message: "Failed to initialize PayPal" });
     console.error(error);
   }
 }
@@ -56,12 +57,18 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
           billingToken: data.billingToken,
         });
         const paymentMethodData = await vaultPaymentMethod(nonce);
+        renderAlert({
+          type: "success",
+          message: `Payment method successfully vaulted: ${JSON.stringify(data)}`,
+        });
         console.log("Vault result", paymentMethodData);
       },
       onCancel(data) {
+        renderAlert({ type: "warning", message: `onCancel() callback calle: ${data.billingToken ?? ""}` });
         console.log("onCancel", data);
       },
       onError(error) {
+        renderAlert({ type: "danger", message: `onError() callback called: ${error.message}` });
         console.log("onError", error);
       },
     });
@@ -73,6 +80,7 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
     try {
       await paypalPaymentSession.start();
     } catch (error) {
+      renderAlert({ type: "danger", message: `PayPal button click failure: ${error.message}` });
       console.error(error);
     }
   });
@@ -106,4 +114,14 @@ async function vaultPaymentMethod(paymentMethodNonce) {
   const result = await response.json();
 
   return result;
+}
+
+function renderAlert({ type, message }) {
+  const alertComponentElement = document.querySelector("alert-component");
+  if (!alertComponentElement) {
+    return;
+  }
+
+  alertComponentElement.setAttribute("type", type);
+  alertComponentElement.innerText = message;
 }

@@ -11,6 +11,7 @@
     <p>A one-time payment session with shipping callbacks.</p>
 
     <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
+    <alert-component></alert-component>
 
     <script src="app.js"></script>
 
@@ -20,5 +21,7 @@
       src="https://js.braintreegateway.com/web/3.137.0/js/paypal-checkout-v6.min.js"
       onload="onPayPalCheckoutV6Loaded()"
     ></script>
+
+    <script async src="/client/shared/alert-component.js"></script>
   </body>
 </html>
