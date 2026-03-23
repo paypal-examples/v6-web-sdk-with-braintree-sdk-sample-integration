@@ -14,26 +14,43 @@ async function onPayPalCheckoutV6Loaded() {
 
     setupPayPalButton(paypalCheckoutV6Instance);
   } catch (error) {
+    renderAlert({ type: "danger", message: "Failed to initialize PayPal" });
     console.error(error);
   }
 }
 
 async function setupPayPalButton(paypalCheckoutV6Instance) {
   const paypalPaymentSession =
-    paypalCheckoutV6Instance.createBillingAgreementSession({
-      billingAgreementDescription: "Save PayPal account for future payments",
+    paypalCheckoutV6Instance.createOneTimePaymentSession({
+      flow: "checkout",
+      amount: "10.00",
+      currency: "USD",
+      intent: "capture",
       async onApprove(data) {
         console.log("onApprove", data);
         const { nonce } = await paypalCheckoutV6Instance.tokenizePayment({
-          billingToken: data.billingToken,
+          orderID: data.orderId,
+          payerID: data.payerId,
         });
-        const paymentMethodData = await vaultPaymentMethod(nonce);
-        console.log("Vault result", paymentMethodData);
+        const orderData = await completePayment(nonce);
+        renderAlert({
+          type: "success",
+          message: `Order successfully captured: ${JSON.stringify(data)}`,
+        });
+        console.log("Capture result", orderData);
       },
       onCancel(data) {
+        renderAlert({
+          type: "warning",
+          message: `onCancel() callback called: ${data.orderId ?? ""}`,
+        });
         console.log("onCancel", data);
       },
       onError(error) {
+        renderAlert({
+          type: "danger",
+          message: `onError() callback called: ${error.message}`,
+        });
         console.log("onError", error);
       },
     });
@@ -45,6 +62,10 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
     try {
       await paypalPaymentSession.start();
     } catch (error) {
+      renderAlert({
+        type: "danger",
+        message: `PayPal button click failure: ${error.message}`,
+      });
       console.error(error);
     }
   });
@@ -65,17 +86,28 @@ async function getBraintreeBrowserSafeClientToken() {
   return clientToken;
 }
 
-async function vaultPaymentMethod(paymentMethodNonce) {
-  const response = await fetch("/braintree-api/payment-method/save", {
+async function completePayment(paymentMethodNonce) {
+  const response = await fetch("/braintree-api/transaction/sale", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       paymentMethodNonce,
+      amount: "10.00",
     }),
   });
   const result = await response.json();
 
   return result;
+}
+
+function renderAlert({ type, message }) {
+  const alertComponentElement = document.querySelector("alert-component");
+  if (!alertComponentElement) {
+    return;
+  }
+
+  alertComponentElement.setAttribute("type", type);
+  alertComponentElement.innerText = message;
 }

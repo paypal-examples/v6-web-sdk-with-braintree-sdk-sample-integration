@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PayPal Billing Agreements - RECURRING Plan Type</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/client/shared/styles.css" />
+    <style>
+      alert-component {
+        max-width: 50rem;
+        margin-top: 4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PayPal Billing Agreements - RECURRING Plan Type</h1>
+    <p>
+      This demo shows how to create a billing agreement with a RECURRING plan
+      type.
+    </p>
+
+    <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
+    <alert-component></alert-component>
+
+    <script src="app.js"></script>
+
+    <script src="https://www.paypalobjects.com/braintree/web/3.137.0/js/client.min.js"></script>
+    <script
+      async
+      src="https://js.braintreegateway.com/web/3.137.0/js/paypal-checkout-v6.min.js"
+      onload="onPayPalCheckoutV6Loaded()"
+    ></script>
+
+    <script async src="/client/shared/alert-component.js"></script>
+  </body>
+</html>
