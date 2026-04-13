@@ -1,4 +1,4 @@
-export async function getBraintreeBrowserSafeClientToken() {
+export async function getBraintreeBrowserSafeClientToken(): Promise<string> {
   const response = await fetch(
     "/braintree-api/auth/browser-safe-client-token",
     {
