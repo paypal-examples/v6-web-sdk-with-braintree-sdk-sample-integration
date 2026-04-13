@@ -10,7 +10,7 @@ declare global {
 }
 
 function App() {
-  const [clientToken, setClientToken] = useState<string>("");
+  const [clientToken, setClientToken] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     async function fetchClientToken() {
