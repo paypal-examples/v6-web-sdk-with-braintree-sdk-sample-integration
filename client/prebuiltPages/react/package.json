@@ -13,7 +13,7 @@
     "typecheck": "tsc --build --noEmit"
   },
   "dependencies": {
-    "@paypal/react-paypal-js": "file:../../../../paypal-js/packages/react-paypal-js/paypal-react-paypal-js-9.1.1.tgz",
+    "@paypal/react-paypal-js": "^9.1.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
