@@ -52,6 +52,7 @@ async function setupPayLaterButton(paypalCheckoutV6Instance) {
 
   const payLaterPaymentSession = paypalCheckoutV6Instance.createPayLaterSession(
     {
+      flow: "checkout",
       amount,
       currency,
       intent: "capture",
