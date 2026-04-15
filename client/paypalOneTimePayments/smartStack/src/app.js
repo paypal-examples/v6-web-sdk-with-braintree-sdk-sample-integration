@@ -26,8 +26,7 @@ async function setupSmartPaymentStack(paypalCheckoutV6Instance) {
   const amount = "100.00";
   const currency = "USD";
 
-  // Shared callbacks for all payment methods
-  const sharedCallbacks = {
+  const callbacks = {
     async onApprove(data) {
       console.log("onApprove", data);
       const { nonce } = await paypalCheckoutV6Instance.tokenizePayment({
@@ -69,7 +68,7 @@ async function setupSmartPaymentStack(paypalCheckoutV6Instance) {
     amount,
     currency,
     intent: "capture",
-    ...sharedCallbacks,
+    ...callbacks,
   });
   paypalButton.removeAttribute("hidden");
   paypalButton.addEventListener("click", () => paypalSession.start());
@@ -84,7 +83,7 @@ async function setupSmartPaymentStack(paypalCheckoutV6Instance) {
       amount,
       currency,
       intent: "capture",
-      ...sharedCallbacks,
+      ...callbacks,
     });
     paylaterButton.removeAttribute("hidden");
     paylaterButton.addEventListener("click", () => paylaterSession.start());
@@ -100,7 +99,7 @@ async function setupSmartPaymentStack(paypalCheckoutV6Instance) {
       currency,
       intent: "capture",
       offerCredit: true,
-      ...sharedCallbacks,
+      ...callbacks,
     });
     creditButton.removeAttribute("hidden");
     creditButton.addEventListener("click", () => creditSession.start());
