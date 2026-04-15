@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>PayPal Pay Later One-time Payment Flow</title>
+    <title>PayPal Smart Payment Stack</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/client/shared/styles.css" />
     <style>
@@ -10,19 +10,32 @@
         max-width: 50rem;
         margin-top: 4rem;
       }
+
+      .buttons-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
     </style>
   </head>
   <body>
-    <h1>PayPal Pay Later One-time Payment Flow</h1>
+    <h1>PayPal Smart Payment Stack</h1>
     <p>
-      This demonstrates the integration pattern for Braintree merchants using
-      the PayPal Pay Later button for one-time payments.
+      This demonstrates rendering multiple PayPal payment buttons (PayPal, Pay
+      Later, and PayPal Credit) in a vertical stack based on eligibility.
     </p>
 
-    <paypal-pay-later-button
-      id="paypal-pay-later-button"
-      hidden
-    ></paypal-pay-later-button>
+    <div class="buttons-container">
+      <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
+      <paypal-pay-later-button
+        id="paylater-button"
+        hidden
+      ></paypal-pay-later-button>
+      <paypal-credit-button
+        id="paypal-credit-button"
+        hidden
+      ></paypal-credit-button>
+    </div>
     <alert-component></alert-component>
 
     <script src="app.js"></script>
