@@ -1,13 +1,51 @@
 import { useEffect, useState } from "react";
-import { BraintreePayPalProvider } from "@paypal/react-paypal-js/sdk-v6";
-import type { BraintreeV6Namespace } from "@paypal/react-paypal-js/sdk-v6";
-import { getBraintreeBrowserSafeClientToken } from "../utils";
+import {
+  BraintreePayPalProvider,
+  INSTANCE_LOADING_STATE,
+  useBraintreePayPal,
+} from "@paypal/react-paypal-js/sdk-v6";
+import type {
+  BraintreeApprovalData,
+  BraintreeV6Namespace,
+} from "@paypal/react-paypal-js/sdk-v6";
+import { completePayment, getBraintreeBrowserSafeClientToken } from "../utils";
+import { PayPalOneTimePaymentButton } from "./PayPalOneTimePaymentButton";
 
 declare global {
   interface Window {
     braintree: BraintreeV6Namespace;
   }
 }
+
+const CheckoutButtons: React.FC = () => {
+  const { braintreePayPalCheckoutInstance, loadingStatus } =
+    useBraintreePayPal();
+  const handleOnApprove = async (data: BraintreeApprovalData) => {
+    console.log("Payment approved!", data);
+
+    if (!braintreePayPalCheckoutInstance) {
+      console.error("Braintree instance not available");
+      return;
+    }
+
+    const { nonce } = await braintreePayPalCheckoutInstance?.tokenizePayment({
+      orderID: data.orderId,
+      payerID: data.payerId,
+    });
+    console.log("Nonce received from Braintree:", nonce);
+    const orderData = await completePayment(nonce);
+    console.log("Capture result data:", orderData);
+  };
+  return (
+    loadingStatus === INSTANCE_LOADING_STATE.RESOLVED && (
+      <PayPalOneTimePaymentButton
+        amount="100"
+        currency="USD"
+        onApprove={handleOnApprove}
+      />
+    )
+  );
+};
 
 function App() {
   const [clientToken, setClientToken] = useState<string | undefined>(undefined);
@@ -34,7 +72,7 @@ function App() {
         namespace={window.braintree}
         braintreeClientToken={clientToken}
       >
-        some text here
+        <CheckoutButtons />
       </BraintreePayPalProvider>
     </div>
   );
