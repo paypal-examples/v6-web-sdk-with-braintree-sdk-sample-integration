@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PayPal Checkout with Vault Flow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/client/shared/styles.css" />
+    <style>
+      alert-component {
+        max-width: 50rem;
+        margin-top: 4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>PayPal Checkout with Vault Flow</h1>
+    <p>
+      This is the recommended integration pattern for Braintree merchants using
+      the PayPal button to capture a one-time payment and vault the customer's
+      PayPal account for future transactions in a single flow.
+    </p>
+
+    <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
+    <alert-component></alert-component>
+
+    <script src="app.js"></script>
+
+    <script src="https://js.braintreegateway.com/web/3.139.0/js/client.min.js"></script>
+    <script
+      async
+      src="https://js.braintreegateway.com/web/3.139.0/js/paypal-checkout-v6.min.js"
+      onload="onPayPalCheckoutV6Loaded()"
+    ></script>
+
+    <script async src="/client/shared/alert-component.js"></script>
+  </body>
+</html>
