@@ -1,16 +1,14 @@
 # PayPal v6 SDK with Braintree Integration Demo
 
-This repository demonstrates how to process PayPal payments by integrating the Braintree Server/Client SDK with PayPal Checkout V6.
+This repository contains sample PayPal integrations for Braintree merchants. It teaches how to use the [paypal-checkout-v6 component](https://braintree.github.io/braintree-web/current/module-braintree-web_paypal-checkout-v6.html) in the Braintree Client SDK.
 
 ## Setup Instructions
 
 ### 1. Clone and Setup Environment
 
 ```bash
-git clone https://github.com/paypal-examples/v6-web-sdk-sample-integration.git
-
+git clone https://github.com/paypal-examples/v6-web-sdk-with-braintree-sdk-sample-integration.git
 cd v6-web-sdk-with-braintree-sdk-sample-integration
-
 cp .env.sample .env
 ```
 
