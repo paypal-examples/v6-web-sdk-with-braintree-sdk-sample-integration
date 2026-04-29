@@ -13,9 +13,24 @@ export async function getBraintreeBrowserSafeClientToken(): Promise<string> {
   return clientToken;
 }
 
+// Slim subset of braintree's ValidatedResponse<Transaction>. See @types/braintree for full types.
+interface TransactionSaleResponseObject {
+  success: boolean;
+  message: string;
+  transaction: {
+    id: string;
+    amount: string;
+    status: string;
+    type: string;
+    currencyIsoCode: string;
+    processorResponseCode: string;
+    processorResponseText: string;
+  };
+}
+
 export async function completePayment(
   paymentMethodNonce: string,
-): Promise<any> {
+): Promise<TransactionSaleResponseObject> {
   const response = await fetch("/braintree-api/transaction/sale", {
     method: "POST",
     headers: {
