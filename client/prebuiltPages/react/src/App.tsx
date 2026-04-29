@@ -28,7 +28,7 @@ const CheckoutButtons: React.FC = () => {
       return;
     }
 
-    const { nonce } = await braintreePayPalCheckoutInstance?.tokenizePayment({
+    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment({
       orderID: data.orderId,
       payerID: data.payerId,
     });
