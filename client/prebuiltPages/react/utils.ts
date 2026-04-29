@@ -13,7 +13,9 @@ export async function getBraintreeBrowserSafeClientToken(): Promise<string> {
   return clientToken;
 }
 
-export async function completePayment(paymentMethodNonce: string): Promise<any> {
+export async function completePayment(
+  paymentMethodNonce: string,
+): Promise<any> {
   const response = await fetch("/braintree-api/transaction/sale", {
     method: "POST",
     headers: {
