@@ -20,6 +20,7 @@ WORKDIR /app/server/node
 RUN npm install --include=dev
 
 # Install React client dependencies
+WORKDIR /app
 COPY client/prebuiltPages/react/package.json client/prebuiltPages/react/package-lock.json* ./client/prebuiltPages/react/
 WORKDIR /app/client/prebuiltPages/react
 RUN npm install --include=dev
