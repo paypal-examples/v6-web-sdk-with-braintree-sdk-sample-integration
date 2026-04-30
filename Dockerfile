@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-ARG NODE_VERSION=20.19.5
+ARG NODE_VERSION=20.20.2
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
@@ -14,9 +14,14 @@ FROM base AS build
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
 
-# Install dependencies for server
+# Install server dependencies
 COPY server/node/.npmrc server/node/package.json server/node/package-lock.json* ./server/node/
 WORKDIR /app/server/node
+RUN npm install --include=dev
+
+# Install React client dependencies
+COPY client/prebuiltPages/react/package.json client/prebuiltPages/react/package-lock.json* ./client/prebuiltPages/react/
+WORKDIR /app/client/prebuiltPages/react
 RUN npm install --include=dev
 
 # Copy all application code
@@ -24,9 +29,18 @@ WORKDIR /app
 COPY server/node ./server/node
 COPY client ./client
 
-# Build all applications and remove dev dependencies
+# Build React client app
+WORKDIR /app/client/prebuiltPages/react
+RUN npm run build
+
+# Build server and remove dev dependencies
 WORKDIR /app/server/node
 RUN npm run build && npm prune --omit=dev
+
+# Clean up React client dev dependencies
+WORKDIR /app/client/prebuiltPages/react
+RUN rm -rf node_modules src
+
 
 # Production stage - minimal runtime image
 FROM base

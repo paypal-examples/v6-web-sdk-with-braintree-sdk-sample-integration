@@ -1,0 +1,28 @@
+name: Fly Deploy (Test)
+
+on:
+  workflow_dispatch:
+    inputs:
+      fly_app:
+        description: "Fly.io app name to deploy to (test instance)"
+        required: true
+        default: "v6-web-sdk-with-braintree-sdk-sample-integration-test"
+      confirm:
+        description: "Type 'deploy' to confirm deployment"
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy test app
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'deploy'
+    environment: fly-test
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io (test)
+        run: flyctl deploy --remote-only --config fly-test.toml --app ${{ github.event.inputs.fly_app }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_TEST }}
