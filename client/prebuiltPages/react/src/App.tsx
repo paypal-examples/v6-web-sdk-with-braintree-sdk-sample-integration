@@ -46,7 +46,9 @@ const CheckoutButtons: React.FC = () => {
     console.log("Capture result data:", orderData);
   };
 
-  const handleCheckoutWithVaultApprove = async (data: BraintreeApprovalData) => {
+  const handleCheckoutWithVaultApprove = async (
+    data: BraintreeApprovalData,
+  ) => {
     if (!braintreePayPalCheckoutInstance) return;
     const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment({
       orderID: data.orderId,
