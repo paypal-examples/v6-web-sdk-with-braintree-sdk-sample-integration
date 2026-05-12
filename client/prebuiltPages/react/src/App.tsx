@@ -75,35 +75,47 @@ const CheckoutButtons: React.FC = () => {
   return (
     loadingStatus === INSTANCE_LOADING_STATE.RESOLVED && (
       <>
-        <BraintreePayPalOneTimePaymentButton
-          amount="100"
-          currency="USD"
-          onApprove={handleOnApprove}
-        />
-        <PayPalBillingAgreementButton
-          onApprove={handleBillingAgreementApprove}
-          onCancel={(data: BraintreeOnCancelData) => {
-            console.log("onCancel", data);
-          }}
-          onError={(err) => {
-            console.error("onError", err);
-          }}
-        />
-        <BraintreePayPalCheckoutWithVaultButton
-          amount="10.00"
-          currency="USD"
-          intent="capture"
-          billingAgreementDetails={{
-            description: "Save payment method for future purchases",
-          }}
-          onApprove={handleCheckoutWithVaultApprove}
-          onCancel={() => {
-            console.log("onCancel");
-          }}
-          onError={(err) => {
-            console.error("onError", err);
-          }}
-        />
+        <section style={{ marginTop: "2rem" }}>
+          <h2>One-Time Payment</h2>
+          <p>Charge the customer a single payment. The payment method is not saved.</p>
+          <BraintreePayPalOneTimePaymentButton
+            amount="100"
+            currency="USD"
+            onApprove={handleOnApprove}
+          />
+        </section>
+        <section style={{ marginTop: "2rem" }}>
+          <h2>Billing Agreement</h2>
+          <p>Save the customer's PayPal account for future transactions without charging them now.</p>
+          <PayPalBillingAgreementButton
+            onApprove={handleBillingAgreementApprove}
+            onCancel={(data: BraintreeOnCancelData) => {
+              console.log("onCancel", data);
+            }}
+            onError={(err) => {
+              console.error("onError", err);
+            }}
+          />
+        </section>
+        <section style={{ marginTop: "2rem" }}>
+          <h2>Checkout with Vault</h2>
+          <p>Capture a one-time payment and save the customer's PayPal account in a single flow.</p>
+          <BraintreePayPalCheckoutWithVaultButton
+            amount="10.00"
+            currency="USD"
+            intent="capture"
+            billingAgreementDetails={{
+              description: "Save payment method for future purchases",
+            }}
+            onApprove={handleCheckoutWithVaultApprove}
+            onCancel={() => {
+              console.log("onCancel");
+            }}
+            onError={(err) => {
+              console.error("onError", err);
+            }}
+          />
+        </section>
       </>
     )
   );
@@ -128,8 +140,7 @@ function App() {
 
   return (
     <div>
-      <h1>React Prebuilt Page</h1>
-      <p>Edit src/App.tsx and save to see changes.</p>
+      <h1>Braintree PayPal Checkout Flows</h1>
       <BraintreePayPalProvider
         namespace={window.braintree}
         braintreeClientToken={clientToken}
