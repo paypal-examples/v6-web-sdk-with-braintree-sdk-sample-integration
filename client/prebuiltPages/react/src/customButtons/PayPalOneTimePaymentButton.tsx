@@ -10,6 +10,7 @@ export const PayPalOneTimePaymentButton: React.FC<
 
   return (
     <paypal-button
+      type="pay"
       onClick={() => handleClick()}
       disabled={isPending}
     ></paypal-button>

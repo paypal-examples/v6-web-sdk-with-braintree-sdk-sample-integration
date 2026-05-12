@@ -45,3 +45,37 @@ export async function completePayment(
 
   return result;
 }
+
+export async function vaultPaymentMethod(paymentMethodNonce: string) {
+  const response = await fetch("/braintree-api/payment-method/save", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      paymentMethodNonce,
+    }),
+  });
+  const result = await response.json();
+
+  return result;
+}
+
+export async function completePaymentAndVault(paymentMethodNonce: string) {
+  const response = await fetch("/braintree-api/transaction/sale", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      paymentMethodNonce,
+      amount: "10.00",
+      options: {
+        storeInVaultOnSuccess: true,
+      },
+    }),
+  });
+  const result = await response.json();
+
+  return result;
+}
