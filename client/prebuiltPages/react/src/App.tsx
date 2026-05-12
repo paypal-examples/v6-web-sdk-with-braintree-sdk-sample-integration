@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
 import {
   BraintreePayPalProvider,
+  BraintreePayPalOneTimePaymentButton,
   INSTANCE_LOADING_STATE,
   useBraintreePayPal,
 } from "@paypal/react-paypal-js/sdk-v6";
 import type {
   BraintreeApprovalData,
+  BraintreeOnCancelData,
   BraintreeV6Namespace,
 } from "@paypal/react-paypal-js/sdk-v6";
-import { completePayment, getBraintreeBrowserSafeClientToken } from "../utils";
-import { PayPalOneTimePaymentButton } from "./PayPalOneTimePaymentButton";
+import {
+  completePayment,
+  completePaymentAndVault,
+  getBraintreeBrowserSafeClientToken,
+  vaultPaymentMethod,
+} from "../utils";
+
+import { PayPalBillingAgreementButton } from "./customButtons/BraintreePayPalBillingAgreementButton";
+import { BraintreePayPalCheckoutWithVaultButton } from "./customButtons/BraintreePayPalCheckoutWithVaultButton";
 
 declare global {
   interface Window {
@@ -36,13 +45,64 @@ const CheckoutButtons: React.FC = () => {
     const orderData = await completePayment(nonce);
     console.log("Capture result data:", orderData);
   };
+
+  const handleCheckoutWithVaultApprove = async (data: BraintreeApprovalData) => {
+    if (!braintreePayPalCheckoutInstance) return;
+    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment({
+      orderID: data.orderId,
+      payerID: data.payerId,
+    });
+    const orderData = await completePaymentAndVault(nonce);
+    console.log("Checkout with vault result:", orderData);
+  };
+
+  const handleBillingAgreementApprove = async (data: BraintreeApprovalData) => {
+    console.log("onApprove", data);
+
+    if (!braintreePayPalCheckoutInstance) {
+      console.error("Braintree instance not available");
+      return;
+    }
+
+    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment({
+      billingToken: data.billingToken,
+    });
+    const paymentMethodData = await vaultPaymentMethod(nonce);
+    console.log("Vault result", paymentMethodData);
+  };
   return (
     loadingStatus === INSTANCE_LOADING_STATE.RESOLVED && (
-      <PayPalOneTimePaymentButton
-        amount="100"
-        currency="USD"
-        onApprove={handleOnApprove}
-      />
+      <>
+        <BraintreePayPalOneTimePaymentButton
+          amount="100"
+          currency="USD"
+          onApprove={handleOnApprove}
+        />
+        <PayPalBillingAgreementButton
+          onApprove={handleBillingAgreementApprove}
+          onCancel={(data: BraintreeOnCancelData) => {
+            console.log("onCancel", data);
+          }}
+          onError={(err) => {
+            console.error("onError", err);
+          }}
+        />
+        <BraintreePayPalCheckoutWithVaultButton
+          amount="10.00"
+          currency="USD"
+          intent="capture"
+          billingAgreementDetails={{
+            description: "Save payment method for future purchases",
+          }}
+          onApprove={handleCheckoutWithVaultApprove}
+          onCancel={() => {
+            console.log("onCancel");
+          }}
+          onError={(err) => {
+            console.error("onError", err);
+          }}
+        />
+      </>
     )
   );
 };
