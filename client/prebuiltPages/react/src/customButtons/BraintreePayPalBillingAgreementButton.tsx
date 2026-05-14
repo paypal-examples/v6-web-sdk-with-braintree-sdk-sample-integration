@@ -1,11 +1,11 @@
 import React from "react";
-import { useBraintreeBillingAgreementSession } from "@paypal/react-paypal-js/sdk-v6";
-import type { UseBraintreeBillingAgreementSessionProps } from "@paypal/react-paypal-js/sdk-v6";
+import { useBraintreePayPalBillingAgreementSession } from "@paypal/react-paypal-js/sdk-v6";
+import type { UseBraintreePayPalBillingAgreementSessionProps } from "@paypal/react-paypal-js/sdk-v6";
 
 export const PayPalBillingAgreementButton: React.FC<
-  UseBraintreeBillingAgreementSessionProps
+  UseBraintreePayPalBillingAgreementSessionProps
 > = (props) => {
-  const { isPending, handleClick } = useBraintreeBillingAgreementSession(props);
+  const { isPending, handleClick } = useBraintreePayPalBillingAgreementSession(props);
 
   return (
     <paypal-button

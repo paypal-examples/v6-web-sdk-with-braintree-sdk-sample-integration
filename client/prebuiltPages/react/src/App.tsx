@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   BraintreePayPalProvider,
   BraintreePayPalOneTimePaymentButton,
+  BraintreePayPalBillingAgreementButton,
   INSTANCE_LOADING_STATE,
   useBraintreePayPal,
 } from "@paypal/react-paypal-js/sdk-v6";
@@ -17,7 +18,6 @@ import {
   vaultPaymentMethod,
 } from "../utils";
 
-import { PayPalBillingAgreementButton } from "./customButtons/BraintreePayPalBillingAgreementButton";
 import { BraintreePayPalCheckoutWithVaultButton } from "./customButtons/BraintreePayPalCheckoutWithVaultButton";
 
 declare global {
@@ -87,7 +87,7 @@ const CheckoutButtons: React.FC = () => {
         <section style={{ marginTop: "2rem" }}>
           <h2>Billing Agreement</h2>
           <p>Save the customer's PayPal account for future transactions without charging them now.</p>
-          <PayPalBillingAgreementButton
+          <BraintreePayPalBillingAgreementButton
             onApprove={handleBillingAgreementApprove}
             onCancel={(data: BraintreeOnCancelData) => {
               console.log("onCancel", data);
@@ -111,7 +111,7 @@ const CheckoutButtons: React.FC = () => {
             onCancel={() => {
               console.log("onCancel");
             }}
-            onError={(err) => {
+            onError={(err: Error) => {
               console.error("onError", err);
             }}
           />

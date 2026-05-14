@@ -1,12 +1,12 @@
 import React from "react";
-import { useBraintreeCheckoutWithVaultSession } from "@paypal/react-paypal-js/sdk-v6";
-import type { UseBraintreeCheckoutWithVaultSessionProps } from "@paypal/react-paypal-js/sdk-v6";
+import { useBraintreePayPalCheckoutWithVaultSession } from "@paypal/react-paypal-js/sdk-v6";
+import type { UseBraintreePayPalCheckoutWithVaultSessionProps } from "@paypal/react-paypal-js/sdk-v6";
 
 export const BraintreePayPalCheckoutWithVaultButton: React.FC<
-  UseBraintreeCheckoutWithVaultSessionProps
+  UseBraintreePayPalCheckoutWithVaultSessionProps
 > = (props) => {
   const { isPending, handleClick } =
-    useBraintreeCheckoutWithVaultSession(props);
+    useBraintreePayPalCheckoutWithVaultSession(props);
 
   return (
     <paypal-button
