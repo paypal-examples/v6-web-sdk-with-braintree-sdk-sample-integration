@@ -3,6 +3,7 @@ import {
   BraintreePayPalProvider,
   BraintreePayPalOneTimePaymentButton,
   BraintreePayPalBillingAgreementButton,
+  BraintreePayPalCheckoutWithVaultButton,
   INSTANCE_LOADING_STATE,
   useBraintreePayPal,
 } from "@paypal/react-paypal-js/sdk-v6";
@@ -17,8 +18,6 @@ import {
   getBraintreeBrowserSafeClientToken,
   vaultPaymentMethod,
 } from "../utils";
-
-import { BraintreePayPalCheckoutWithVaultButton } from "./customButtons/BraintreePayPalCheckoutWithVaultButton";
 
 declare global {
   interface Window {
@@ -88,6 +87,7 @@ const CheckoutButtons: React.FC = () => {
           <h2>Billing Agreement</h2>
           <p>Save the customer's PayPal account for future transactions without charging them now.</p>
           <BraintreePayPalBillingAgreementButton
+            type="subscribe"
             onApprove={handleBillingAgreementApprove}
             onCancel={(data: BraintreeOnCancelData) => {
               console.log("onCancel", data);
@@ -104,6 +104,7 @@ const CheckoutButtons: React.FC = () => {
             amount="10.00"
             currency="USD"
             intent="capture"
+            type="buynow"
             billingAgreementDetails={{
               description: "Save payment method for future purchases",
             }}
