@@ -76,7 +76,10 @@ const CheckoutButtons: React.FC = () => {
       <>
         <section style={{ marginTop: "2rem" }}>
           <h2>One-Time Payment</h2>
-          <p>Charge the customer a single payment. The payment method is not saved.</p>
+          <p>
+            Charge the customer a single payment. The payment method is not
+            saved.
+          </p>
           <BraintreePayPalOneTimePaymentButton
             amount="100"
             currency="USD"
@@ -85,7 +88,10 @@ const CheckoutButtons: React.FC = () => {
         </section>
         <section style={{ marginTop: "2rem" }}>
           <h2>Billing Agreement</h2>
-          <p>Save the customer's PayPal account for future transactions without charging them now.</p>
+          <p>
+            Save the customer's PayPal account for future transactions without
+            charging them now.
+          </p>
           <BraintreePayPalBillingAgreementButton
             type="subscribe"
             onApprove={handleBillingAgreementApprove}
@@ -99,7 +105,10 @@ const CheckoutButtons: React.FC = () => {
         </section>
         <section style={{ marginTop: "2rem" }}>
           <h2>Checkout with Vault</h2>
-          <p>Capture a one-time payment and save the customer's PayPal account in a single flow.</p>
+          <p>
+            Capture a one-time payment and save the customer's PayPal account in
+            a single flow.
+          </p>
           <BraintreePayPalCheckoutWithVaultButton
             amount="10.00"
             currency="USD"
