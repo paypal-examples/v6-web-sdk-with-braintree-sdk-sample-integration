@@ -1,0 +1,22 @@
+name: Fly Deploy (Test)
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy test app
+    runs-on: ubuntu-latest
+    environment: fly-test
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io (test)
+        run: flyctl deploy --remote-only --config fly-test.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_TEST }}
