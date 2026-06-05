@@ -17,13 +17,13 @@ RUN apt-get update -qq && \
 # Install server dependencies
 COPY server/node/.npmrc server/node/package.json server/node/package-lock.json* ./server/node/
 WORKDIR /app/server/node
-RUN npm install --include=dev
+RUN npm ci --include=dev
 
 # Install React client dependencies
 WORKDIR /app
 COPY client/prebuiltPages/react/package.json client/prebuiltPages/react/package-lock.json* ./client/prebuiltPages/react/
 WORKDIR /app/client/prebuiltPages/react
-RUN npm install --include=dev
+RUN npm ci --include=dev
 
 # Copy all application code
 WORKDIR /app
