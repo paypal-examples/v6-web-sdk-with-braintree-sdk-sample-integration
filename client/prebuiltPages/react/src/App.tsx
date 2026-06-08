@@ -47,10 +47,7 @@ const CheckoutButtons: React.FC = () => {
     data: BraintreeApprovalData,
   ) => {
     if (!braintreePayPalCheckoutInstance) return;
-    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment({
-      orderID: data.orderId,
-      payerID: data.payerId,
-    });
+    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment(data);
     const orderData = await completePaymentAndVault(nonce);
     console.log("Checkout with vault result:", orderData);
   };
@@ -63,9 +60,7 @@ const CheckoutButtons: React.FC = () => {
       return;
     }
 
-    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment({
-      billingToken: data.billingToken,
-    });
+    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment(data);
     const paymentMethodData = await vaultPaymentMethod(nonce);
     console.log("Vault result", paymentMethodData);
   };
