@@ -7,10 +7,11 @@ export async function transactionSaleRouteHandler(
   request: Request,
   response: Response,
 ) {
-  const { amount, paymentMethodNonce } = z
+  const { amount, paymentMethodNonce, options } = z
     .object({
       amount: z.string(),
       paymentMethodNonce: z.string(),
+      options: z.object({ storeInVaultOnSuccess: z.boolean() }).optional(),
     })
     .parse(request.body);
 
@@ -19,6 +20,7 @@ export async function transactionSaleRouteHandler(
     paymentMethodNonce,
     options: {
       submitForSettlement: true,
+      storeInVaultOnSuccess: options?.storeInVaultOnSuccess,
     },
   });
 
