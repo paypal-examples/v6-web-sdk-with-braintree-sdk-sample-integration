@@ -30,10 +30,7 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
       },
       async onApprove(data) {
         console.log("onApprove", data);
-        const { nonce } = await paypalCheckoutV6Instance.tokenizePayment({
-          orderID: data.orderId,
-          payerID: data.payerId,
-        });
+        const { nonce } = await paypalCheckoutV6Instance.tokenizePayment(data);
         const orderData = await completePaymentAndVault(nonce);
         renderAlert({
           type: "success",

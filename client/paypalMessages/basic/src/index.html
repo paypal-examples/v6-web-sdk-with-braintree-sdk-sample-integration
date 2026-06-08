@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>PayPal Billing Agreements - RECURRING Plan Type</title>
+    <title>PayPal Messages</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/client/shared/styles.css" />
     <style>
@@ -13,14 +13,19 @@
     </style>
   </head>
   <body>
-    <h1>PayPal Billing Agreements - RECURRING Plan Type</h1>
+    <h1>PayPal Messages</h1>
     <p>
-      This demo shows how to create a billing agreement with a RECURRING plan
-      type.
+      This is the recommended integration pattern for Braintree merchants using
+      the PayPal Messages.
     </p>
 
-    <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
-    <alert-component></alert-component>
+    <paypal-message
+      id="paypal-message"
+      auto-bootstrap
+      amount="50"
+      buyer-country="US"
+      currency-code="USD"
+    ></paypal-message>
 
     <script src="app.js"></script>
 
@@ -30,7 +35,5 @@
       src="https://js.braintreegateway.com/web/3.142.0/js/paypal-checkout-v6.min.js"
       onload="onPayPalCheckoutV6Loaded()"
     ></script>
-
-    <script async src="/client/shared/alert-component.js"></script>
   </body>
 </html>

@@ -29,10 +29,7 @@ async function setupSmartPaymentStack(paypalCheckoutV6Instance) {
   const callbacks = {
     async onApprove(data) {
       console.log("onApprove", data);
-      const { nonce } = await paypalCheckoutV6Instance.tokenizePayment({
-        orderID: data.orderId,
-        payerID: data.payerId,
-      });
+      const { nonce } = await paypalCheckoutV6Instance.tokenizePayment(data);
       const orderData = await completePayment(nonce, amount);
       renderAlert({
         type: "success",

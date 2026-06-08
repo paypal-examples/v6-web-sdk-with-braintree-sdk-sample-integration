@@ -36,10 +36,8 @@ const CheckoutButtons: React.FC = () => {
       return;
     }
 
-    const { nonce } = await braintreePayPalCheckoutInstance.tokenizePayment({
-      orderID: data.orderId,
-      payerID: data.payerId,
-    });
+    const { nonce } =
+      await braintreePayPalCheckoutInstance.tokenizePayment(data);
     console.log("Nonce received from Braintree:", nonce);
     const orderData = await completePayment(nonce);
     console.log("Capture result data:", orderData);
