@@ -1,21 +1,23 @@
-# Braintree PayPal v6 — React Demo
+# Braintree PayPal v6 — React Ecommerce Demo
 
-A working React + Vite app that demonstrates the recommended way to integrate Braintree's [`paypal-checkout-v6`](https://braintree.github.io/braintree-web/current/PayPalCheckoutV6.html) component using the [`@paypal/react-paypal-js`](https://github.com/paypal/paypal-js/tree/main/packages/react-paypal-js) (v10) library.
+A minimal React + Vite ecommerce store that demonstrates the recommended way to integrate Braintree's [`paypal-checkout-v6`](https://braintree.github.io/braintree-web/current/PayPalCheckoutV6.html) component using the [`@paypal/react-paypal-js`](https://github.com/paypal/paypal-js/tree/main/packages/react-paypal-js) (v10) library.
+
+The app starts on a landing page where the buyer picks one of three Braintree PayPal flows. Each flow then walks through a simple product → cart → checkout journey (or, for the billing-agreement flow, a settings-style "save my PayPal" page with no cart).
 
 This page serves two purposes:
 
-1. **Run the demo** — see all three Braintree PayPal flows working locally.
+1. **Run the demo** — see all three Braintree PayPal flows working in an ecommerce context.
 2. **Recommended integration guide** — copy the pattern into your own React app.
 
 ## What's demonstrated
 
-| Flow                | Button                                   | When to use                                                                                             |
-| ------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| One-time payment    | `BraintreePayPalOneTimePaymentButton`    | Charge the buyer once. Don't save the payment method.                                                   |
-| Billing agreement   | `BraintreePayPalBillingAgreementButton`  | Save the buyer's PayPal account for future use without charging now (subscriptions, vault-first flows). |
-| Checkout with vault | `BraintreePayPalCheckoutWithVaultButton` | Charge the buyer once **and** save the payment method in a single flow.                                 |
+| Flow                | Button                                   | UX in this demo                                              |
+| ------------------- | ---------------------------------------- | ------------------------------------------------------------ |
+| One-time payment    | `BraintreePayPalOneTimePaymentButton`    | Browse products → cart → checkout with cart total charged. Payment method not saved. |
+| Checkout with vault | `BraintreePayPalCheckoutWithVaultButton` | Same product → cart → checkout flow, but the PayPal account is saved on success. |
+| Billing agreement   | `BraintreePayPalBillingAgreementButton`  | Single settings-style page (no cart) that saves the PayPal account for future charges without taking a payment now. |
 
-Stack: `@paypal/react-paypal-js@^10.0.0`, Braintree Web SDK `3.142.0` loaded from CDN, React 19, Vite 7.
+Stack: `@paypal/react-paypal-js@^10.0.0`, `react-router-dom@^7`, Braintree Web SDK `3.142.0` loaded from CDN, React 19, Vite 7.
 
 ## Run the demo
 
@@ -33,13 +35,14 @@ The dev server proxies `/braintree-api/*` to the backend, so it must be running.
 
 ## Project layout
 
-| File                 | Purpose                                                                                                                                                                                                            |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `index.html`         | Loads the Braintree CDN scripts (`client.min.js`, `paypal-checkout-v6.min.js`) before the React bundle so `window.braintree` is defined when the app boots.                                                        |
-| `src/main.tsx`       | Standard React entry point.                                                                                                                                                                                        |
-| `src/App.tsx`        | Fetches the Braintree client token, wraps the tree in `BraintreePayPalProvider`, and renders the three prebuilt buttons. **Start here.**                                                                           |
-| `src/customButtons/` | Alternative pattern: same flows built with the `useBraintreePayPal*Session` hooks and the bare `<paypal-button>` web component. See [Advanced: build your own button](#advanced-build-your-own-button-with-hooks). |
-| `utils.ts`           | Backend fetch helpers — `getBraintreeBrowserSafeClientToken`, `completePayment`, `vaultPaymentMethod`, `completePaymentAndVault`.                                                                                  |
+| File                          | Purpose                                                                                                                                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `index.html`                  | Loads the Braintree CDN scripts (`client.min.js`, `paypal-checkout-v6.min.js`) before the React bundle so `window.braintree` is defined when the app boots.                                                        |
+| `src/main.tsx`                | React entry point; imports shared CSS.                                                                                                                                                                             |
+| `src/App.tsx`                 | Fetches the Braintree client token, sets up `BraintreePayPalProvider` + `CartProvider`, and configures the router. **Start here.**                                                                                 |
+| **`src/paymentIntegrations/`** | **The Braintree integration code — one file per flow. See its [README](./src/paymentIntegrations/README.md) for a per-file map. Contains `OneTimePaymentCheckout`, `VaultWithPurchaseCheckout`, `SavePaymentPage` (billing agreement), and the `customButtons/` reference implementations.** |
+| `src/storeDemo/`              | Generic ecommerce scaffolding (Home, Base product / cart pages, ConfirmationPage, cart context, product hook, presentational components). No Braintree-specific logic — exists only to make the integration demo feel like a real store. Safe to skim. |
+| `utils.ts`                    | Backend fetch helpers — `getBraintreeBrowserSafeClientToken`, `completePayment(nonce, amount)`, `completePaymentAndVault(nonce, amount)`, `vaultPaymentMethod(nonce)`, `getProducts()`.                            |
 
 ## Recommended integration
 
@@ -228,7 +231,7 @@ See `server/node/src/braintreeServerSdkClient.ts` and the handlers under `server
 When you need a custom button UI, your own layout, or finer-grained control over `isPending` / `error` state, drop down to the matching session hook and render the bare `<paypal-button>` web component yourself. The handler pattern (`onApprove` → `tokenizePayment` → backend) is identical.
 
 ```tsx
-// src/customButtons/PayPalOneTimePaymentButton.tsx
+// src/paymentIntegrations/customButtons/PayPalOneTimePaymentButton.tsx
 import { useBraintreePayPalOneTimePaymentSession } from "@paypal/react-paypal-js/sdk-v6";
 import type { UseBraintreePayPalOneTimePaymentSessionProps } from "@paypal/react-paypal-js/sdk-v6";
 
@@ -248,7 +251,7 @@ export const PayPalOneTimePaymentButton: React.FC<
 };
 ```
 
-The three hooks (`useBraintreePayPalOneTimePaymentSession`, `useBraintreePayPalBillingAgreementSession`, `useBraintreePayPalCheckoutWithVaultSession`) all accept the same props as their matching prebuilt button and return `{ isPending, error, handleClick }`. See `src/customButtons/` for working examples of all three.
+The three hooks (`useBraintreePayPalOneTimePaymentSession`, `useBraintreePayPalBillingAgreementSession`, `useBraintreePayPalCheckoutWithVaultSession`) all accept the same props as their matching prebuilt button and return `{ isPending, error, handleClick }`. See `src/paymentIntegrations/customButtons/` for working examples of all three.
 
 ## Reference
 

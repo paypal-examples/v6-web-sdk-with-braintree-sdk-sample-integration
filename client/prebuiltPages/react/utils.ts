@@ -30,6 +30,7 @@ interface TransactionSaleResponseObject {
 
 export async function completePayment(
   paymentMethodNonce: string,
+  amount: string,
 ): Promise<TransactionSaleResponseObject> {
   const response = await fetch("/braintree-api/transaction/sale", {
     method: "POST",
@@ -38,7 +39,7 @@ export async function completePayment(
     },
     body: JSON.stringify({
       paymentMethodNonce,
-      amount: "10.00",
+      amount,
     }),
   });
   const result = await response.json();
@@ -61,7 +62,10 @@ export async function vaultPaymentMethod(paymentMethodNonce: string) {
   return result;
 }
 
-export async function completePaymentAndVault(paymentMethodNonce: string) {
+export async function completePaymentAndVault(
+  paymentMethodNonce: string,
+  amount: string,
+) {
   const response = await fetch("/braintree-api/transaction/sale", {
     method: "POST",
     headers: {
@@ -69,7 +73,7 @@ export async function completePaymentAndVault(paymentMethodNonce: string) {
     },
     body: JSON.stringify({
       paymentMethodNonce,
-      amount: "10.00",
+      amount,
       options: {
         storeInVaultOnSuccess: true,
       },
@@ -78,4 +82,15 @@ export async function completePaymentAndVault(paymentMethodNonce: string) {
   const result = await response.json();
 
   return result;
+}
+
+export interface Product {
+  sku: string;
+  name: string;
+  price: string;
+}
+
+export async function getProducts(): Promise<Product[]> {
+  const response = await fetch("/braintree-api/products");
+  return response.json();
 }

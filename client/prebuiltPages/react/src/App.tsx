@@ -1,23 +1,16 @@
 import { useEffect, useState } from "react";
-import {
-  BraintreePayPalProvider,
-  BraintreePayPalOneTimePaymentButton,
-  BraintreePayPalBillingAgreementButton,
-  BraintreePayPalCheckoutWithVaultButton,
-  INSTANCE_LOADING_STATE,
-  useBraintreePayPal,
-} from "@paypal/react-paypal-js/sdk-v6";
-import type {
-  BraintreeApprovalData,
-  BraintreeOnCancelData,
-  BraintreeV6Namespace,
-} from "@paypal/react-paypal-js/sdk-v6";
-import {
-  completePayment,
-  completePaymentAndVault,
-  getBraintreeBrowserSafeClientToken,
-  vaultPaymentMethod,
-} from "../utils";
+import { HashRouter, Routes, Route } from "react-router-dom";
+import { BraintreePayPalProvider } from "@paypal/react-paypal-js/sdk-v6";
+import type { BraintreeV6Namespace } from "@paypal/react-paypal-js/sdk-v6";
+import { CartProvider } from "./storeDemo/context/CartContext";
+import { Home } from "./storeDemo/pages/Home";
+import { BaseProductPage } from "./storeDemo/pages/BaseProductPage";
+import { BaseCartPage } from "./storeDemo/pages/BaseCartPage";
+import { ConfirmationPage } from "./storeDemo/pages/ConfirmationPage";
+import { OneTimePaymentCheckout } from "./paymentIntegrations/OneTimePaymentCheckout";
+import { VaultWithPurchaseCheckout } from "./paymentIntegrations/VaultWithPurchaseCheckout";
+import { SavePaymentPage } from "./paymentIntegrations/SavePaymentPage";
+import { getBraintreeBrowserSafeClientToken } from "../utils";
 
 declare global {
   interface Window {
@@ -25,134 +18,79 @@ declare global {
   }
 }
 
-const CheckoutButtons: React.FC = () => {
-  const { braintreePayPalCheckoutInstance, loadingStatus } =
-    useBraintreePayPal();
-  const handleOnApprove = async (data: BraintreeApprovalData) => {
-    console.log("Payment approved!", data);
-
-    if (!braintreePayPalCheckoutInstance) {
-      console.error("Braintree instance not available");
-      return;
-    }
-
-    const { nonce } =
-      await braintreePayPalCheckoutInstance.tokenizePayment(data);
-    console.log("Nonce received from Braintree:", nonce);
-    const orderData = await completePayment(nonce);
-    console.log("Capture result data:", orderData);
-  };
-
-  const handleCheckoutWithVaultApprove = async (
-    data: BraintreeApprovalData,
-  ) => {
-    if (!braintreePayPalCheckoutInstance) return;
-    const { nonce } =
-      await braintreePayPalCheckoutInstance.tokenizePayment(data);
-    const orderData = await completePaymentAndVault(nonce);
-    console.log("Checkout with vault result:", orderData);
-  };
-
-  const handleBillingAgreementApprove = async (data: BraintreeApprovalData) => {
-    console.log("onApprove", data);
-
-    if (!braintreePayPalCheckoutInstance) {
-      console.error("Braintree instance not available");
-      return;
-    }
-
-    const { nonce } =
-      await braintreePayPalCheckoutInstance.tokenizePayment(data);
-    const paymentMethodData = await vaultPaymentMethod(nonce);
-    console.log("Vault result", paymentMethodData);
-  };
-  return (
-    loadingStatus === INSTANCE_LOADING_STATE.RESOLVED && (
-      <>
-        <section style={{ marginTop: "2rem" }}>
-          <h2>One-Time Payment</h2>
-          <p>
-            Charge the customer a single payment. The payment method is not
-            saved.
-          </p>
-          <BraintreePayPalOneTimePaymentButton
-            amount="100"
-            currency="USD"
-            onApprove={handleOnApprove}
-          />
-        </section>
-        <section style={{ marginTop: "2rem" }}>
-          <h2>Billing Agreement</h2>
-          <p>
-            Save the customer's PayPal account for future transactions without
-            charging them now.
-          </p>
-          <BraintreePayPalBillingAgreementButton
-            type="subscribe"
-            onApprove={handleBillingAgreementApprove}
-            onCancel={(data: BraintreeOnCancelData) => {
-              console.log("onCancel", data);
-            }}
-            onError={(err) => {
-              console.error("onError", err);
-            }}
-          />
-        </section>
-        <section style={{ marginTop: "2rem" }}>
-          <h2>Checkout with Vault</h2>
-          <p>
-            Capture a one-time payment and save the customer's PayPal account in
-            a single flow.
-          </p>
-          <BraintreePayPalCheckoutWithVaultButton
-            amount="10.00"
-            currency="USD"
-            intent="capture"
-            type="buynow"
-            billingAgreementDetails={{
-              description: "Save payment method for future purchases",
-            }}
-            onApprove={handleCheckoutWithVaultApprove}
-            onCancel={() => {
-              console.log("onCancel");
-            }}
-            onError={(err: Error) => {
-              console.error("onError", err);
-            }}
-          />
-        </section>
-      </>
-    )
-  );
-};
-
 function App() {
   const [clientToken, setClientToken] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    async function fetchClientToken() {
-      const braintreeClientToken = await getBraintreeBrowserSafeClientToken();
-
-      setClientToken(braintreeClientToken);
-    }
-
-    fetchClientToken();
+    getBraintreeBrowserSafeClientToken().then(setClientToken);
   }, []);
 
   if (!clientToken) {
-    return <div>Loading...</div>;
+    return <div>Loading…</div>;
   }
 
   return (
-    <div>
-      <h1>Braintree PayPal Checkout Flows</h1>
-      <BraintreePayPalProvider
-        namespace={window.braintree}
-        braintreeClientToken={clientToken}
-      >
-        <CheckoutButtons />
-      </BraintreePayPalProvider>
-    </div>
+    <BraintreePayPalProvider
+      namespace={window.braintree}
+      braintreeClientToken={clientToken}
+    >
+      <CartProvider>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+
+            <Route
+              path="/one-time-payment"
+              element={
+                <BaseProductPage
+                  flowLabel="One-Time Payment"
+                  flowBasePath="/one-time-payment"
+                />
+              }
+            />
+            <Route
+              path="/one-time-payment/cart"
+              element={
+                <BaseCartPage
+                  flowLabel="One-Time Payment"
+                  flowBasePath="/one-time-payment"
+                />
+              }
+            />
+            <Route
+              path="/one-time-payment/checkout"
+              element={<OneTimePaymentCheckout />}
+            />
+
+            <Route
+              path="/vault-with-purchase"
+              element={
+                <BaseProductPage
+                  flowLabel="Checkout with Vault"
+                  flowBasePath="/vault-with-purchase"
+                />
+              }
+            />
+            <Route
+              path="/vault-with-purchase/cart"
+              element={
+                <BaseCartPage
+                  flowLabel="Checkout with Vault"
+                  flowBasePath="/vault-with-purchase"
+                />
+              }
+            />
+            <Route
+              path="/vault-with-purchase/checkout"
+              element={<VaultWithPurchaseCheckout />}
+            />
+
+            <Route path="/save-payment" element={<SavePaymentPage />} />
+            <Route path="/confirmation" element={<ConfirmationPage />} />
+          </Routes>
+        </HashRouter>
+      </CartProvider>
+    </BraintreePayPalProvider>
   );
 }
 
