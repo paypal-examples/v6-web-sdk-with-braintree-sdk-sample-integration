@@ -19,10 +19,7 @@ export const BaseCartPage: React.FC<BaseCartPageProps> = ({
     <div>
       <FlowNav
         flowLabel={flowLabel}
-        steps={[
-          { label: "Products", to: flowBasePath },
-          { label: "Cart" },
-        ]}
+        steps={[{ label: "Products", to: flowBasePath }, { label: "Cart" }]}
       />
       <h1>Your cart</h1>
 

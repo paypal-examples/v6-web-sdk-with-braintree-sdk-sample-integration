@@ -13,7 +13,11 @@ export const FlowNav: React.FC<FlowNavProps> = ({ flowLabel, steps = [] }) => (
     {steps.map((step, i) => (
       <span key={i}>
         <span className="flow-nav-sep">/</span>
-        {step.to ? <Link to={step.to}>{step.label}</Link> : <span>{step.label}</span>}
+        {step.to ? (
+          <Link to={step.to}>{step.label}</Link>
+        ) : (
+          <span>{step.label}</span>
+        )}
       </span>
     ))}
   </nav>

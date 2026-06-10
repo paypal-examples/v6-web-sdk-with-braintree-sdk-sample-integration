@@ -31,9 +31,9 @@ export const Home: React.FC = () => (
   <div>
     <h1>Braintree PayPal v6 — Ecommerce Demo</h1>
     <p>
-      Three Braintree PayPal flows demonstrated inside a minimal ecommerce store.
-      Pick a flow to see how its v6 button component fits into a product → cart →
-      checkout journey.
+      Three Braintree PayPal flows demonstrated inside a minimal ecommerce
+      store. Pick a flow to see how its v6 button component fits into a product
+      → cart → checkout journey.
     </p>
     <div className="home-flow-grid">
       {FLOWS.map((flow) => (

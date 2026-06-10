@@ -11,10 +11,10 @@ This page serves two purposes:
 
 ## What's demonstrated
 
-| Flow                | Button                                   | UX in this demo                                              |
-| ------------------- | ---------------------------------------- | ------------------------------------------------------------ |
-| One-time payment    | `BraintreePayPalOneTimePaymentButton`    | Browse products → cart → checkout with cart total charged. Payment method not saved. |
-| Checkout with vault | `BraintreePayPalCheckoutWithVaultButton` | Same product → cart → checkout flow, but the PayPal account is saved on success. |
+| Flow                | Button                                   | UX in this demo                                                                                                     |
+| ------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| One-time payment    | `BraintreePayPalOneTimePaymentButton`    | Browse products → cart → checkout with cart total charged. Payment method not saved.                                |
+| Checkout with vault | `BraintreePayPalCheckoutWithVaultButton` | Same product → cart → checkout flow, but the PayPal account is saved on success.                                    |
 | Billing agreement   | `BraintreePayPalBillingAgreementButton`  | Single settings-style page (no cart) that saves the PayPal account for future charges without taking a payment now. |
 
 Stack: `@paypal/react-paypal-js@^10.0.0`, `react-router-dom@^7`, Braintree Web SDK `3.142.0` loaded from CDN, React 19, Vite 7.
@@ -35,14 +35,14 @@ The dev server proxies `/braintree-api/*` to the backend, so it must be running.
 
 ## Project layout
 
-| File                          | Purpose                                                                                                                                                                                                            |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `index.html`                  | Loads the Braintree CDN scripts (`client.min.js`, `paypal-checkout-v6.min.js`) before the React bundle so `window.braintree` is defined when the app boots.                                                        |
-| `src/main.tsx`                | React entry point; imports shared CSS.                                                                                                                                                                             |
-| `src/App.tsx`                 | Fetches the Braintree client token, sets up `BraintreePayPalProvider` + `CartProvider`, and configures the router. **Start here.**                                                                                 |
+| File                           | Purpose                                                                                                                                                                                                                                                                                      |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index.html`                   | Loads the Braintree CDN scripts (`client.min.js`, `paypal-checkout-v6.min.js`) before the React bundle so `window.braintree` is defined when the app boots.                                                                                                                                  |
+| `src/main.tsx`                 | React entry point; imports shared CSS.                                                                                                                                                                                                                                                       |
+| `src/App.tsx`                  | Fetches the Braintree client token, sets up `BraintreePayPalProvider` + `CartProvider`, and configures the router. **Start here.**                                                                                                                                                           |
 | **`src/paymentIntegrations/`** | **The Braintree integration code — one file per flow. See its [README](./src/paymentIntegrations/README.md) for a per-file map. Contains `OneTimePaymentCheckout`, `VaultWithPurchaseCheckout`, `SavePaymentPage` (billing agreement), and the `customButtons/` reference implementations.** |
-| `src/storeDemo/`              | Generic ecommerce scaffolding (Home, Base product / cart pages, ConfirmationPage, cart context, product hook, presentational components). No Braintree-specific logic — exists only to make the integration demo feel like a real store. Safe to skim. |
-| `utils.ts`                    | Backend fetch helpers — `getBraintreeBrowserSafeClientToken`, `completePayment(nonce, amount)`, `completePaymentAndVault(nonce, amount)`, `vaultPaymentMethod(nonce)`, `getProducts()`.                            |
+| `src/storeDemo/`               | Generic ecommerce scaffolding (Home, Base product / cart pages, ConfirmationPage, cart context, product hook, presentational components). No Braintree-specific logic — exists only to make the integration demo feel like a real store. Safe to skim.                                       |
+| `utils.ts`                     | Backend fetch helpers — `getBraintreeBrowserSafeClientToken`, `completePayment(nonce, amount)`, `completePaymentAndVault(nonce, amount)`, `vaultPaymentMethod(nonce)`, `getProducts()`.                                                                                                      |
 
 ## Recommended integration
 

@@ -6,12 +6,12 @@ Everything in the sibling `src/storeDemo/` directory (Home, BaseProductPage, Bas
 
 ## Files
 
-| File                              | Braintree component                      | Demonstrates                                                                                                                |
-| --------------------------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `OneTimePaymentCheckout.tsx`      | `BraintreePayPalOneTimePaymentButton`    | Guest checkout. Tokenizes the buyer's PayPal, posts the nonce + cart total to `POST /braintree-api/transaction/sale`.        |
-| `VaultWithPurchaseCheckout.tsx`   | `BraintreePayPalCheckoutWithVaultButton` | Charge + save in one approval. Same `/transaction/sale` endpoint with `options.storeInVaultOnSuccess: true`.                |
-| `SavePaymentPage.tsx`             | `BraintreePayPalBillingAgreementButton`  | Vault-only flow (no charge). Posts the nonce to `POST /braintree-api/payment-method/save`. No cart involved.                |
-| `customButtons/`                  | Session hooks + `<paypal-button>`        | Lower-level pattern: same three flows built with `useBraintreePayPal*Session` hooks when you need a custom UI. Reference only — not wired into the app routes. |
+| File                            | Braintree component                      | Demonstrates                                                                                                                                                   |
+| ------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OneTimePaymentCheckout.tsx`    | `BraintreePayPalOneTimePaymentButton`    | Guest checkout. Tokenizes the buyer's PayPal, posts the nonce + cart total to `POST /braintree-api/transaction/sale`.                                          |
+| `VaultWithPurchaseCheckout.tsx` | `BraintreePayPalCheckoutWithVaultButton` | Charge + save in one approval. Same `/transaction/sale` endpoint with `options.storeInVaultOnSuccess: true`.                                                   |
+| `SavePaymentPage.tsx`           | `BraintreePayPalBillingAgreementButton`  | Vault-only flow (no charge). Posts the nonce to `POST /braintree-api/payment-method/save`. No cart involved.                                                   |
+| `customButtons/`                | Session hooks + `<paypal-button>`        | Lower-level pattern: same three flows built with `useBraintreePayPal*Session` hooks when you need a custom UI. Reference only — not wired into the app routes. |
 
 ## Integration pattern
 

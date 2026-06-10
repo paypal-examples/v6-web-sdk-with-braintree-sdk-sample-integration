@@ -26,8 +26,7 @@ export const ConfirmationPage: React.FC = () => {
         )}
         {state.transactionId && (
           <div>
-            <strong>Transaction ID:</strong>{" "}
-            <code>{state.transactionId}</code>
+            <strong>Transaction ID:</strong> <code>{state.transactionId}</code>
           </div>
         )}
         {state.vaulted && (

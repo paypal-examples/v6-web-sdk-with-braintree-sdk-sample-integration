@@ -17,10 +17,7 @@ export const BaseProductPage: React.FC<BaseProductPageProps> = ({
 
   return (
     <div>
-      <FlowNav
-        flowLabel={flowLabel}
-        steps={[{ label: "Products" }]}
-      />
+      <FlowNav flowLabel={flowLabel} steps={[{ label: "Products" }]} />
       <h1>Products</h1>
       <p>Add items to your cart, then continue to checkout.</p>
       {productsLoading && <p>Loading products…</p>}
@@ -29,8 +26,7 @@ export const BaseProductPage: React.FC<BaseProductPageProps> = ({
       )}
       <div className="product-grid">
         {products.map((p) => {
-          const inCart =
-            items.find((i) => i.sku === p.sku)?.quantity ?? 0;
+          const inCart = items.find((i) => i.sku === p.sku)?.quantity ?? 0;
           return (
             <ProductCard
               key={p.sku}

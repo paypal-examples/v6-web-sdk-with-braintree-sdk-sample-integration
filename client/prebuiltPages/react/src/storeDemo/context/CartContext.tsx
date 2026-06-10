@@ -23,8 +23,11 @@ function loadInitialItems(): CartItem[] {
 export const CartProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const { products, loading: productsLoading, error: productsError } =
-    useProducts();
+  const {
+    products,
+    loading: productsLoading,
+    error: productsError,
+  } = useProducts();
   const [items, setItems] = useState<CartItem[]>(loadInitialItems);
 
   useEffect(() => {
@@ -63,9 +66,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       .map((item) => {
         const product = productMap.get(item.sku);
         if (!product) return null;
-        const subtotal = (
-          parseFloat(product.price) * item.quantity
-        ).toFixed(2);
+        const subtotal = (parseFloat(product.price) * item.quantity).toFixed(2);
         return { ...item, product, subtotal };
       })
       .filter((l): l is LineItem => l !== null);
