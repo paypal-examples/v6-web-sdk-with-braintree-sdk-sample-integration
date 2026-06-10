@@ -230,6 +230,9 @@ code {
   margin-top: 1.5rem;
 }
 .checkout-button-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   margin: 1.5rem 0;
   max-width: 400px;
 }
