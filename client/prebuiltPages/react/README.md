@@ -17,7 +17,7 @@ This page serves two purposes:
 | Checkout with vault | `BraintreePayPalCheckoutWithVaultButton` | Same product → cart → checkout flow, but the PayPal account is saved on success.                                    |
 | Billing agreement   | `BraintreePayPalBillingAgreementButton`  | Single settings-style page (no cart) that saves the PayPal account for future charges without taking a payment now. |
 
-Stack: `@paypal/react-paypal-js@^10.0.0`, `react-router-dom@^7`, Braintree Web SDK `3.142.0` loaded from CDN, React 19, Vite 7.
+Stack: `@paypal/react-paypal-js@^10.1.0`, `react-router-dom@^7`, Braintree Web SDK `3.142.0` loaded from CDN, React 19, Vite 7.
 
 ## Run the demo
 
