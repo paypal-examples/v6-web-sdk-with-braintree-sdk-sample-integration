@@ -10,6 +10,7 @@ import { ConfirmationPage } from "./storeDemo/pages/ConfirmationPage";
 import { OneTimePaymentCheckout } from "./paymentIntegrations/OneTimePaymentCheckout";
 import { VaultWithPurchaseCheckout } from "./paymentIntegrations/VaultWithPurchaseCheckout";
 import { SavePaymentPage } from "./paymentIntegrations/SavePaymentPage";
+import { PayPalMessagesPage } from "./paymentIntegrations/PayPalMessagesPage";
 import { getBraintreeBrowserSafeClientToken } from "../utils";
 
 declare global {
@@ -86,6 +87,7 @@ function App() {
             />
 
             <Route path="/save-payment" element={<SavePaymentPage />} />
+            <Route path="/messages" element={<PayPalMessagesPage />} />
             <Route path="/confirmation" element={<ConfirmationPage />} />
           </Routes>
         </HashRouter>

@@ -25,6 +25,14 @@ const FLOWS = [
       "Save the buyer's PayPal account for future charges without taking a payment now. Settings-style flow — no cart.",
     cta: "Save PayPal",
   },
+  {
+    to: "/messages",
+    title: "PayPal Messages",
+    component: "useBraintreePayPalMessages",
+    description:
+      "Display PayPal promotional / BNPL messaging for an amount using the new Braintree messages hook.",
+    cta: "View messaging",
+  },
 ];
 
 export const Home: React.FC = () => (
