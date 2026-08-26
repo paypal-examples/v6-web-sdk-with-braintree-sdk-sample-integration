@@ -108,9 +108,7 @@ async function setupEditSavedPayment(preferredPaymentMethodToken) {
   }
 }
 
-async function getBraintreeBrowserSafeClientToken(
-  preferredPaymentMethodToken,
-) {
+async function getBraintreeBrowserSafeClientToken(preferredPaymentMethodToken) {
   const url = preferredPaymentMethodToken
     ? `/braintree-api/auth/browser-safe-client-token?preferredPaymentMethodToken=${encodeURIComponent(preferredPaymentMethodToken)}`
     : "/braintree-api/auth/browser-safe-client-token";
