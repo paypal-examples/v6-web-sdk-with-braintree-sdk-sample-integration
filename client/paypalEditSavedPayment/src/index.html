@@ -8,11 +8,47 @@
     <style>
       .buttons-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
         gap: 0.75rem;
       }
-      section + section {
+      h2 {
         margin-top: 2rem;
+      }
+      .buttons-container img {
+        width: 45px;
+        height: auto;
+        display: block;
+      }
+      .buttons-container span {
+        font-weight: bold;
+      }
+      .note {
+        max-width: 50rem;
+        padding: 0.75rem 1rem;
+        background-color: #f0f7ff;
+        border-left: 3px solid #0070ba;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      #submit-button {
+        width: 225px;
+        height: 48px;
+        margin-top: 1.5rem;
+        border: none;
+        border-radius: 4px;
+        background-color: #0070ba;
+        color: #ffffff;
+        font-family: Verdana, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+      #submit-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
       alert-component {
         max-width: 50rem;
@@ -23,35 +59,35 @@
   <body>
     <h1>PayPal Edit Saved Payment Flow (Edit FI)</h1>
     <p>
-      This is the recommended integration pattern for Braintree merchants that
-      let a returning buyer view and change the PayPal funding instrument (card,
-      bank account, etc.) behind an already-saved PayPal account, inline during
-      checkout.
+      This is the recommended integration pattern for the returning buyer flow
+      where a vaulted PayPal payment method is previewed, allowing the buyer to
+      click and edit the underlying funding instrument as needed.
+    </p>
+    <p class="note">
+      Need a saved PayPal account to try this flow? Click the PayPal button
+      below first — it vaults one via a one-time checkout, no ID entry required.
     </p>
 
-    <section>
-      <h2>Step 1: Save a PayPal account</h2>
-      <p>
-        Edit Saved Payment needs an existing vaulted PayPal account to edit, so
-        first save one the same way the Billing Agreements demo does.
-      </p>
-      <div class="buttons-container">
-        <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
-      </div>
-    </section>
+    <h2>Step 1: Save a PayPal account</h2>
+    <div class="buttons-container">
+      <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
+    </div>
 
-    <section id="edit-section" hidden>
-      <h2>Step 2: Edit the saved payment method</h2>
-      <p>
-        Click the saved payment method below to open PayPal and change the
-        underlying funding instrument.
-      </p>
-      <div class="buttons-container">
-        <paypal-saved-payment-methods
-          id="edit-button"
-        ></paypal-saved-payment-methods>
-      </div>
-    </section>
+    <h2>Step 2: Display Saved Payment Component</h2>
+    <div class="buttons-container">
+      <img
+        src="https://www.paypalobjects.com/js-sdk-logos/2.3.2/paypal-mark.svg"
+        alt="PayPal"
+        width="45"
+      />
+      <span>PayPal</span>
+      <paypal-saved-payment-methods
+        id="saved-payment-method"
+        hidden
+      ></paypal-saved-payment-methods>
+    </div>
+
+    <button type="button" id="submit-button">Submit Order</button>
 
     <alert-component></alert-component>
 
