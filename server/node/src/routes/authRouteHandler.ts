@@ -8,9 +8,10 @@ export async function clientTokenRouteHandler(
   request: Request,
   response: Response,
 ) {
-  const { preferredPaymentMethodToken } = z
+  const { preferredPaymentMethodToken, customerId } = z
     .object({
       preferredPaymentMethodToken: z.string().optional(),
+      customerId: z.string().optional(),
     })
     .parse(request.query);
 
@@ -23,7 +24,9 @@ export async function clientTokenRouteHandler(
     return;
   }
 
-  const { clientToken } = await client.clientToken.generate({});
+  const { clientToken } = await client.clientToken.generate(
+    customerId ? { customerId } : {},
+  );
 
   response.json({
     clientToken,

@@ -1,10 +1,15 @@
-// Set once the one-time checkout below vaults a PayPal account.
-let vaultedPaymentMethodToken = null;
+// Populated by the "Set" button in Step 2. Only one of the two is required.
+const vaultConfig = {
+  vaultId: "",
+  targetCustomerId: "",
+};
 
 // Set when the buyer approves an edited funding instrument via the saved
 // payment method component. The submit button charges this nonce instead of
-// the previously vaulted token.
+// falling back to the vault ID entered in Step 2.
 let approvedNonce = null;
+
+const ORDER_AMOUNT = "10.00";
 
 async function onPayPalCheckoutV6Loaded() {
   try {
@@ -23,16 +28,24 @@ async function onPayPalCheckoutV6Loaded() {
     setupVaultButton(paypalCheckoutV6Instance);
 
     document
+      .querySelector("#set-vault-config")
+      .addEventListener("click", setupEditSavedPayment);
+
+    document
       .querySelector("#submit-button")
       .addEventListener("click", onSubmitOrder);
   } catch (error) {
     console.error(error);
-    renderAlert({ type: "danger", message: `Initialization failed: ${error}` });
+    renderAlert("#step1-alert", {
+      type: "danger",
+      message: `Initialization failed: ${error}`,
+    });
   }
 }
 
-// A one-time checkout that vaults a PayPal account, so there is a saved
-// payment method to preview/edit below.
+// Step 1: a one-time checkout that vaults a PayPal account. Displays the
+// resulting vault ID and customer ID, which a merchant would normally save
+// server-side to look up this payment method on a future visit.
 function setupVaultButton(paypalCheckoutV6Instance) {
   const paypalPaymentSession =
     paypalCheckoutV6Instance.createBillingAgreementSession({
@@ -45,21 +58,22 @@ function setupVaultButton(paypalCheckoutV6Instance) {
         const paymentMethodData = await vaultPaymentMethod(nonce);
         console.log("Vault result", paymentMethodData);
 
-        vaultedPaymentMethodToken = paymentMethodData.paymentMethod.token;
-        renderAlert({
+        const { token: vaultId, customerId } = paymentMethodData.paymentMethod;
+        displayVaultedIds({ vaultId, customerId });
+        renderAlert("#step1-alert", {
           type: "success",
-          message:
-            'PayPal account saved — click it below to edit, or "Submit Order" to pay with it as-is.',
+          message: "Vaulted! Use one of the IDs below in Step 2.",
         });
-
-        await setupEditSavedPayment(vaultedPaymentMethodToken);
       },
       onCancel(data) {
-        renderAlert({ type: "warning", message: "onCancel() callback called" });
+        renderAlert("#step1-alert", {
+          type: "warning",
+          message: "onCancel() callback called",
+        });
         console.log("onCancel", data);
       },
       onError(error) {
-        renderAlert({
+        renderAlert("#step1-alert", {
           type: "danger",
           message: `onError() callback called: ${error}`,
         });
@@ -79,14 +93,27 @@ function setupVaultButton(paypalCheckoutV6Instance) {
   });
 }
 
-// Exchanges the vaulted payment method token for a client token that embeds
-// it as the `preferredPaymentMethodToken`, then reveals the saved payment
-// method component so the buyer can preview/edit it.
-async function setupEditSavedPayment(preferredPaymentMethodToken) {
+// Tracks the active session so the click handler (attached once) always
+// uses the most recently configured SDK instance.
+let editSavedPaymentSession;
+
+// Step 2: exchange the merchant-provided vault ID or target customer ID for
+// a client token, then render the saved payment method component.
+async function setupEditSavedPayment() {
   try {
-    const editClientToken = await getBraintreeBrowserSafeClientToken(
-      preferredPaymentMethodToken,
-    );
+    // Changing the vault configuration invalidates any previously-approved
+    // edit.
+    approvedNonce = null;
+
+    vaultConfig.vaultId = document.querySelector("#vault-id").value.trim();
+    vaultConfig.targetCustomerId = document
+      .querySelector("#target-customer-id")
+      .value.trim();
+
+    const editClientToken = await getBraintreeBrowserSafeClientToken({
+      preferredPaymentMethodToken: vaultConfig.vaultId,
+      customerId: vaultConfig.targetCustomerId,
+    });
     const editBraintreeInstance = await window.braintree.client.create({
       authorization: editClientToken,
     });
@@ -98,9 +125,9 @@ async function setupEditSavedPayment(preferredPaymentMethodToken) {
 
     await editPaypalCheckoutV6Instance.loadPayPalSDK();
 
-    const editSavedPaymentSession =
+    editSavedPaymentSession =
       editPaypalCheckoutV6Instance.createEditSavedPaymentSession({
-        amount: "10.00",
+        amount: ORDER_AMOUNT,
         currency: "USD",
         intent: "authorize",
         commit: false,
@@ -111,20 +138,20 @@ async function setupEditSavedPayment(preferredPaymentMethodToken) {
             payerId: data.payerId,
           });
           approvedNonce = payload.nonce;
-          renderAlert({
+          renderAlert("#step2-alert", {
             type: "success",
             message: `Payment method successfully updated for order ${data.orderId} — click "Submit Order" to charge it. ${JSON.stringify(data)}`,
           });
         },
         onCancel(data) {
-          renderAlert({
+          renderAlert("#step2-alert", {
             type: "warning",
             message: "onCancel() callback called",
           });
           console.log("onCancel", data);
         },
         onError(error) {
-          renderAlert({
+          renderAlert("#step2-alert", {
             type: "danger",
             message: `onError() callback called: ${error}`,
           });
@@ -135,7 +162,16 @@ async function setupEditSavedPayment(preferredPaymentMethodToken) {
     const savedPaymentMethodComponent = document.querySelector(
       "#saved-payment-method",
     );
-    savedPaymentMethodComponent.removeAttribute("hidden");
+    document
+      .querySelector("#saved-payment-method-container")
+      .removeAttribute("hidden");
+    document.querySelector("#submit-button").removeAttribute("hidden");
+    document.querySelector("#vault-config").setAttribute("hidden", "");
+
+    if (savedPaymentMethodComponent.dataset.listenerAttached) {
+      return;
+    }
+    savedPaymentMethodComponent.dataset.listenerAttached = "true";
 
     savedPaymentMethodComponent.addEventListener("click", async () => {
       try {
@@ -146,7 +182,7 @@ async function setupEditSavedPayment(preferredPaymentMethodToken) {
     });
   } catch (error) {
     console.error(error);
-    renderAlert({
+    renderAlert("#step2-alert", {
       type: "danger",
       message: `Edit session setup failed: ${error}`,
     });
@@ -158,11 +194,11 @@ async function onSubmitOrder() {
   submitButton.disabled = true;
 
   try {
-    if (!approvedNonce && !vaultedPaymentMethodToken) {
-      renderAlert({
+    if (!approvedNonce && !vaultConfig.vaultId) {
+      renderAlert("#step2-alert", {
         type: "warning",
         message:
-          "No payment method to submit — save a PayPal account first, or click it to approve an edit.",
+          "No payment method to submit — enter a vault ID in Step 2, or click the saved payment method to approve an edit first.",
       });
       return;
     }
@@ -170,18 +206,18 @@ async function onSubmitOrder() {
     const transactionResult = await completePayment(
       approvedNonce
         ? { paymentMethodNonce: approvedNonce }
-        : { paymentMethodToken: vaultedPaymentMethodToken },
+        : { paymentMethodToken: vaultConfig.vaultId },
     );
 
     approvedNonce = null;
     console.log("Sale result", transactionResult);
-    renderAlert({
+    renderAlert("#step2-alert", {
       type: "success",
       message: `Order successfully captured! ${JSON.stringify(transactionResult)}`,
     });
   } catch (error) {
     console.error(error);
-    renderAlert({
+    renderAlert("#step2-alert", {
       type: "danger",
       message: `Order submit failed: ${error.message}`,
     });
@@ -190,9 +226,24 @@ async function onSubmitOrder() {
   }
 }
 
-async function getBraintreeBrowserSafeClientToken(preferredPaymentMethodToken) {
-  const url = preferredPaymentMethodToken
-    ? `/braintree-api/auth/browser-safe-client-token?preferredPaymentMethodToken=${encodeURIComponent(preferredPaymentMethodToken)}`
+async function getBraintreeBrowserSafeClientToken({
+  preferredPaymentMethodToken,
+  customerId,
+} = {}) {
+  const queryParams = new URLSearchParams();
+  if (preferredPaymentMethodToken) {
+    queryParams.append(
+      "preferredPaymentMethodToken",
+      preferredPaymentMethodToken,
+    );
+  }
+  if (customerId) {
+    queryParams.append("customerId", customerId);
+  }
+
+  const queryString = queryParams.toString();
+  const url = queryString
+    ? `/braintree-api/auth/browser-safe-client-token?${queryString}`
     : "/braintree-api/auth/browser-safe-client-token";
 
   const response = await fetch(url, {
@@ -229,7 +280,7 @@ async function completePayment(paymentSource) {
     },
     body: JSON.stringify({
       ...paymentSource,
-      amount: "10.00",
+      amount: ORDER_AMOUNT,
     }),
   });
   const result = await response.json();
@@ -237,12 +288,20 @@ async function completePayment(paymentSource) {
   return result;
 }
 
-function renderAlert({ type, message }) {
-  const alertComponentElement = document.querySelector("alert-component");
+function renderAlert(target, { type, message }) {
+  const alertComponentElement = document.querySelector(target);
   if (!alertComponentElement) {
     return;
   }
 
   alertComponentElement.setAttribute("type", type);
   alertComponentElement.innerText = message;
+}
+
+// Persists the vaulted IDs on the page (rather than just the transient
+// alert) so a merchant can copy them into the Step 2 form.
+function displayVaultedIds({ vaultId, customerId }) {
+  document.querySelector("#vaulted-customer-id").textContent = customerId;
+  document.querySelector("#vaulted-vault-id").textContent = vaultId;
+  document.querySelector("#vaulted-ids").removeAttribute("hidden");
 }
