@@ -26,7 +26,10 @@ export async function clientTokenRouteHandler(
       resolvedPreferredPaymentMethodToken,
     );
 
-    response.json({ clientToken });
+    response.json({
+      clientToken,
+      preferredPaymentMethodToken: resolvedPreferredPaymentMethodToken,
+    });
     return;
   }
 

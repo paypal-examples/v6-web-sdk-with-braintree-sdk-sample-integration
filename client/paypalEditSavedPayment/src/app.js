@@ -38,10 +38,12 @@ async function setupEditSavedPayment() {
       .querySelector("#target-customer-id")
       .value.trim();
 
-    const editClientToken = await getBraintreeBrowserSafeClientToken({
-      preferredPaymentMethodToken: vaultConfig.vaultId,
-      customerId: vaultConfig.targetCustomerId,
-    });
+    const { clientToken: editClientToken, preferredPaymentMethodToken } =
+      await getBraintreeBrowserSafeClientToken({
+        preferredPaymentMethodToken: vaultConfig.vaultId,
+        customerId: vaultConfig.targetCustomerId,
+      });
+    vaultConfig.vaultId = preferredPaymentMethodToken;
     const editBraintreeInstance = await window.braintree.client.create({
       authorization: editClientToken,
     });
@@ -180,9 +182,8 @@ async function getBraintreeBrowserSafeClientToken({
       "Content-Type": "application/json",
     },
   });
-  const { clientToken } = await response.json();
 
-  return clientToken;
+  return response.json();
 }
 
 async function completePayment(paymentSource) {
