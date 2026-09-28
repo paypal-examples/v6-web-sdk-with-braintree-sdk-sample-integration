@@ -27,9 +27,10 @@ async function setupPayPalButton(paypalCheckoutV6Instance) {
         console.log("onApprove", data);
         const { nonce } = await paypalCheckoutV6Instance.tokenizePayment(data);
         const paymentMethodData = await vaultPaymentMethod(nonce);
+        const { token: vaultId, customerId } = paymentMethodData.paymentMethod;
         renderAlert({
           type: "success",
-          message: `Payment method successfully vaulted: ${JSON.stringify(data)}`,
+          message: `Vaulted! Use these for the Edit Saved Payment flow — customerId: ${customerId} | vaultId: ${vaultId}`,
         });
         console.log("Vault result", paymentMethodData);
       },

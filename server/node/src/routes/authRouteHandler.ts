@@ -15,20 +15,41 @@ export async function clientTokenRouteHandler(
     })
     .parse(request.query);
 
-  if (preferredPaymentMethodToken) {
+  const resolvedPreferredPaymentMethodToken =
+    preferredPaymentMethodToken ||
+    (customerId
+      ? await findPayPalAccountTokenForCustomer(customerId)
+      : undefined);
+
+  if (resolvedPreferredPaymentMethodToken) {
     const clientToken = await generateClientTokenWithPreferredPaymentMethod(
-      preferredPaymentMethodToken,
+      resolvedPreferredPaymentMethodToken,
     );
 
     response.json({ clientToken });
     return;
   }
 
-  const { clientToken } = await client.clientToken.generate(
-    customerId ? { customerId } : {},
-  );
+  const { clientToken } = await client.clientToken.generate({});
 
   response.json({
     clientToken,
   });
+}
+
+async function findPayPalAccountTokenForCustomer(
+  customerId: string,
+): Promise<string> {
+  const customer = await client.customer.find(customerId);
+  const paypalAccount =
+    customer.paypalAccounts?.find((account) => account.default) ??
+    customer.paypalAccounts?.[0];
+
+  if (!paypalAccount) {
+    throw new Error(
+      `No vaulted PayPal account found for customerId: ${customerId}`,
+    );
+  }
+
+  return paypalAccount.token;
 }
