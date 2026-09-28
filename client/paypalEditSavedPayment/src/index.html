@@ -101,33 +101,17 @@
       where a vaulted PayPal payment method is previewed, allowing the buyer to
       click and edit the underlying funding instrument as needed.
     </p>
-
-    <h2>Step 1: Save a PayPal account</h2>
-    <p>
-      Click the PayPal button below to vault a PayPal account via a one-time
-      checkout.
-    </p>
     <p class="note">
-      In production, save the resulting <code>customerId</code> and
-      <code>vaultId</code> to your database — you'll need one of them to look up
-      this saved payment method on the buyer's next visit.
-    </p>
-    <div class="buttons-container">
-      <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
-    </div>
-
-    <alert-component id="step1-alert"></alert-component>
-
-    <p id="vaulted-ids" class="note" hidden>
-      Vaulted! customerId: <code id="vaulted-customer-id"></code> | vaultId:
-      <code id="vaulted-vault-id"></code>
+      Need a Vault ID or Customer ID to try this flow? Run the
+      <a href="/client/paypalBillingAgreements/basic/src/index.html"
+        >Billing Agreements</a
+      >
+      example first — after approving, check the browser console for the vaulted
+      payment method's <code>token</code> (vaultId) and <code>customerId</code>.
+      <strong>Only one is needed</strong> below (not both).
     </p>
 
-    <h2>Step 2: Display Saved Payment Component</h2>
-    <p class="note">
-      Enter the vault ID or target customer ID from Step 1.
-      <strong>Only one is needed</strong> (not both).
-    </p>
+    <h2>Display Saved Payment Component</h2>
     <div id="vault-config" class="vault-config">
       <div class="custom-field">
         <label class="field-label" for="vault-id">Vault ID:</label>
@@ -162,7 +146,7 @@
 
     <button type="button" id="submit-button" hidden>Submit Order</button>
 
-    <alert-component id="step2-alert"></alert-component>
+    <alert-component></alert-component>
 
     <script src="app.js"></script>
 
