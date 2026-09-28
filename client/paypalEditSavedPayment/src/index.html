@@ -19,11 +19,6 @@
       h2 {
         margin-top: 2rem;
       }
-      .buttons-container img {
-        width: 45px;
-        height: auto;
-        display: block;
-      }
       .buttons-container span {
         font-weight: bold;
       }
@@ -158,11 +153,7 @@
     </div>
 
     <div id="saved-payment-method-container" class="buttons-container" hidden>
-      <img
-        src="https://www.paypalobjects.com/js-sdk-logos/2.3.2/paypal-mark.svg"
-        alt="PayPal"
-        width="45"
-      />
+      <paypal-monogram class="paypal-white"></paypal-monogram>
       <span>PayPal</span>
       <paypal-saved-payment-methods
         id="saved-payment-method"
