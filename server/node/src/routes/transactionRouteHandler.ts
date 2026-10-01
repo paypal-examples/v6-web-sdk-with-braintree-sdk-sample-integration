@@ -7,17 +7,26 @@ export async function transactionSaleRouteHandler(
   request: Request,
   response: Response,
 ) {
-  const { amount, paymentMethodNonce, options } = z
+  const { amount, paymentMethodNonce, paymentMethodToken, options } = z
     .object({
       amount: z.string(),
-      paymentMethodNonce: z.string(),
+      paymentMethodNonce: z.string().optional(),
+      paymentMethodToken: z.string().optional(),
       options: z.object({ storeInVaultOnSuccess: z.boolean() }).optional(),
     })
+    .refine(
+      (data) =>
+        Boolean(data.paymentMethodNonce) !== Boolean(data.paymentMethodToken),
+      {
+        message:
+          "Provide exactly one of paymentMethodNonce or paymentMethodToken",
+      },
+    )
     .parse(request.body);
 
   const transactionSaleResponse = await client.transaction.sale({
     amount,
-    paymentMethodNonce,
+    ...(paymentMethodNonce ? { paymentMethodNonce } : { paymentMethodToken }),
     options: {
       submitForSettlement: true,
       storeInVaultOnSuccess: options?.storeInVaultOnSuccess,
